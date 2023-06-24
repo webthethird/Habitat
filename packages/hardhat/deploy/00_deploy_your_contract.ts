@@ -21,10 +21,12 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  await deploy("ERC721Soulbound", {
     from: deployer,
     // Contract constructor arguments
-    args: [deployer],
+    args: [
+      "https://previews.123rf.com/images/falieiev/falieiev1703/falieiev170300004/73322841-a-green-plain-a-forest-a-grass.jpg",
+    ],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
@@ -39,4 +41,4 @@ export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+deployYourContract.tags = ["ERC721Soulbound"];
