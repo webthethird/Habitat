@@ -2,20 +2,18 @@
 pragma solidity ^0.8.0;
 
 import "./SingleOwnershipSoulbound.sol";
+import "./interfaces/IERC4883.sol";
 
-contract HabitatNFT is SingleOwnershipSoulbound {
-    string public baseURI;
+contract HabitatNFT is SingleOwnershipSoulbound, IERC4883 {
+    string public baseSVG;
 
-    constructor(string memory _baseURI) SingleOwnershipSoulbound("Habitat NFT", "HAB") {
-        baseURI = _baseURI;
+    constructor(string memory _baseSVG) SingleOwnershipSoulbound("Habitat NFT", "HAB") {
+        baseSVG = _baseSVG;
     }
 
-    /**
-     * @dev Base URI for computing {tokenURI}. If set, the resulting URI for each
-     * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
-     * by default, can be overridden in child contracts.
-     */
-    function _baseURI() internal view override returns (string memory) {
-        return baseURI;
+    function renderTokenById(uint256 id) external view override returns (string memory) {
+        // Shhhh, not used
+        id; 
+        return baseSVG;
     }
 }
