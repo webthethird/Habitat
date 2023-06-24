@@ -2094,6 +2094,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/router@npm:1.7.0":
+  version: 1.7.0
+  resolution: "@remix-run/router@npm:1.7.0"
+  checksum: 80cab2fda9e4b9047c991e9b05b8bda8afa2adf7b85c785d7e6f593a399eb264d6a74302438babc81833b5d304eae0b22832f27552b1601e2ca9001d94b8e174
+  languageName: node
+  linkType: hard
+
 "@rollup/pluginutils@npm:^4.0.0":
   version: 4.2.1
   resolution: "@rollup/pluginutils@npm:4.2.1"
@@ -4217,6 +4224,52 @@ __metadata:
     motion: 10.15.5
     qrcode: 1.5.1
   checksum: e32491dbaea598c8b7ec86af4aaf1adb0a4ecfd7d6726dbe859c128cf256d47cbfd06b615001f9d109e3c30ae63ecb644f6956a38c9cebac137c9a5bcd6d97dd
+  languageName: node
+  linkType: hard
+
+"@web3uikit/config@npm:*":
+  version: 0.1.2
+  resolution: "@web3uikit/config@npm:0.1.2"
+  checksum: 0e67b8e26013b818ad7219c21c69894d193fe868ab6acbf6827910e56934a25ede8142c66d4b30e705d8b11b021f7ff4867d821b7712a7c514d4afea39391ce5
+  languageName: node
+  linkType: hard
+
+"@web3uikit/core@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "@web3uikit/core@npm:1.1.5"
+  dependencies:
+    "@web3uikit/config": "*"
+    "@web3uikit/icons": "*"
+    "@web3uikit/styles": "*"
+    react-router-dom: ^6.3.0
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: a804ebd53f80f3ec4f77e7d7be8e649fb04d93e6e93d27b0b175a33bd06042c244f134eb543790154f3eaf4b98408a8114f3c12e9e9eb3e506eaa4fec604a672
+  languageName: node
+  linkType: hard
+
+"@web3uikit/icons@npm:*":
+  version: 1.1.2
+  resolution: "@web3uikit/icons@npm:1.1.2"
+  dependencies:
+    "@web3uikit/config": "*"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: c7d9908885605393f2f77b72719e28615b4fc15d1980e609201f4fb03865469e3c76fb259ad07ae61c6941ec1c85f87a3769886445b76a44deb54c6dc217074f
+  languageName: node
+  linkType: hard
+
+"@web3uikit/styles@npm:*":
+  version: 1.1.4
+  resolution: "@web3uikit/styles@npm:1.1.4"
+  dependencies:
+    "@web3uikit/config": "*"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 72a37f771fe51d9a5e8fbebafe625557c125104f3789132c2bdf819de816ef0c852fa5b908dbc2d78be1d28b264ce82e57f61ffe899884d8714a0cca6bc560dd
   languageName: node
   linkType: hard
 
@@ -12020,6 +12073,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-router-dom@npm:^6.3.0":
+  version: 6.14.0
+  resolution: "react-router-dom@npm:6.14.0"
+  dependencies:
+    "@remix-run/router": 1.7.0
+    react-router: 6.14.0
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 66800b8779f5ae9f8b8e1f41e25599519a40c532e020a8c1450e1645d2c8cc8351e51ed0f2516584681e9a509c6c40f629f2d80663123e132c68022c0edced03
+  languageName: node
+  linkType: hard
+
+"react-router@npm:6.14.0":
+  version: 6.14.0
+  resolution: "react-router@npm:6.14.0"
+  dependencies:
+    "@remix-run/router": 1.7.0
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 50a941746d12e81cea5495505c1afbcd099cc7d497624b013454cfd5a360d9403578f8fb3df17973bf775fbff91cb76477448023d537215e6aa71a8b85ae95bd
+  languageName: node
+  linkType: hard
+
 "react-style-singleton@npm:^2.2.1":
   version: 2.2.1
   resolution: "react-style-singleton@npm:2.2.1"
@@ -12634,6 +12711,7 @@ __metadata:
   dependencies:
     "@ethereum-attestation-service/eas-sdk": ^0.29.0
     "@tokenbound/sdk": ^0.3.0
+    "@web3uikit/core": ^1.1.5
     husky: ^8.0.1
     lint-staged: ^13.0.3
   languageName: unknown

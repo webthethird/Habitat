@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@ethereum-attestation-service/eas-sdk": "^0.29.0",
-    "@tokenbound/sdk": "^0.3.0"
+    "@tokenbound/sdk": "^0.3.0",
+    "@web3uikit/core": "^1.1.5"
   }
 }
