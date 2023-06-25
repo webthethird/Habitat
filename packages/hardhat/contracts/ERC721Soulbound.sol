@@ -18,8 +18,9 @@ contract ERC721Soulbound is ERC721Enumerable, IERC5192 {
     }
 
     function mint() public virtual {
-        _beforeTokenTransfer(address(0), _msgSender(), totalSupply(), 1);
-        _safeMint(_msgSender(), totalSupply());
+        uint newId = totalSupply();
+        _beforeTokenTransfer(address(0), _msgSender(), newId, 1);
+        _safeMint(_msgSender(), newId);
     }
 
     /**

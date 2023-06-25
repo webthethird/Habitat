@@ -10,7 +10,11 @@ import "./HabitatNFT.sol";
 contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
     HabitatNFT public habitat;
 
-    constructor(address _habitat) ERC721("NFTree", "Tree") {
+    constructor() ERC721("NFTree", "Tree") {
+        
+    }
+
+    function setHabitatNFT(address _habitat) public {
         habitat = HabitatNFT(_habitat);
     }
 
@@ -31,7 +35,7 @@ contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
         require(hab_account != address(0), "HabitatNFT with given ID has no account");
 
         _beforeTokenTransfer(address(0), hab_account, newId, 1);
-        _safeMint(hab_account, newId);
+        _mint(hab_account, newId);
         _setTokenURI(newId, svg);
     }
 
