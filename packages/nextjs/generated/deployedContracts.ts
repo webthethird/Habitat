@@ -2034,7 +2034,7 @@ const contracts = {
           ],
         },
         HabitatNFT: {
-          address: "0xB35320f934eEEA8a09abF6981F6F8701e648c6f9",
+          address: "0xa42010dC6958EC05779ff2f24F641e948CbFE1f3",
           abi: [
             {
               inputs: [
