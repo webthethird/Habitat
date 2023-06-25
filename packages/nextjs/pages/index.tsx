@@ -1,12 +1,18 @@
 import Link from "next/link";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
-import React, { useState } from 'react';
-import { DonateButton } from "~~/components/scaffold-eth";
-import { useAccount, useProvider } from "wagmi";
-import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { BigNumber } from "ethers";
+import React, { FC, useState } from 'react';
+import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+// import { DonateButton } from "~~/components/scaffold-eth";
+import { useAccount, useProvider, useNetwork } from "wagmi";
+import { hardhat, localhost } from "wagmi/chains";
+import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { useScaffoldContractRead, useScaffoldContractWrite, useAccountBalance, useTransactor } from "~~/hooks/scaffold-eth";
+import { BigNumber, utils } from "ethers";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { getLocalProvider } from "~~/utils/scaffold-eth";
+
+const NUM_OF_ETH = "1";
 
 
 const Home: NextPage = () => {
@@ -23,10 +29,10 @@ const Home: NextPage = () => {
 
     // Initialize SchemaEncoder with the schema string
     const schemaEncoder = new SchemaEncoder("address donation_from, address donation_to, bytes32 donation_tx, uint256 donation_value");
-    const encodedData = schemaEncoder.encodeData([
-        { name: "eventId", value: 1, type: "uint256" },
-        { name: "voteIndex", value: 1, type: "uint8" },
-    ]);
+    // const encodedData = schemaEncoder.encodeData([
+    //     { name: "eventId", value: 1, type: "uint256" },
+    //     { name: "voteIndex", value: 1, type: "uint8" },
+    // ]);
 
     const { data: baseId } = useScaffoldContractRead({
         contractName: "HabitatNFT",
@@ -91,101 +97,184 @@ const Home: NextPage = () => {
 
     const WorldButton = () => {
         const [isClicked, setIsClicked] = useState(false);
-    
+
         const handleClick = () => {
             setIsClicked(true);
         };
-    
+
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const action = urlParams.get("action") ?? "";
+
         const buttonStyle = {
-            width: '280px',
+            width: '300px',
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            marginLeft: '140px',
+            margin: '27px',
+            marginTop: '-370px',
             fontSize: '25px',
-            marginBottom: '20px',
             backgroundColor: isClicked ? '#A5E84D' : '',
         };
-    
-        return (
-            <button style={buttonStyle} onClick={handleClick}>
-                Verify World ID
-            </button>
-        );
+
+        // return (
+        //   <IDKitWidget
+        //     action={action}
+        //     onSuccess={onSuccess}
+        //     handleVerify={handleProof}
+        //     app_id={app_id_key}
+        //     credential_types={[CredentialType.Orb, CredentialType.Phone]}
+        //   >
+        //     {({ open }: { open: FC }) => <button style={buttonStyle} onClick={() => { open(); handleClick(); }}>Verify with World ID</button>}
+        //   </IDKitWidget>
+        // );
     };
-    
-    
-    
+
+
     const MintButton = () => {
         const [isClicked, setIsClicked] = useState(false);
-    
+
         const handleClick = () => {
             setIsClicked(true);
-            mintHabitatAsync;
         };
-    
+
         const buttonStyle = {
-            width: '280px',
+            width: '300px',
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            marginLeft: '140px',
+            marginTop: '-370px',
             fontSize: '25px',
+            margin: '27px',
             marginBottom: '20px',
             backgroundColor: isClicked ? '#A5E84D' : '',
         };
-    
+
         return (
-            <button style={buttonStyle} onClick={mintHabitatAsync}>
+            <button style={buttonStyle} onClick={handleClick}>
                 Mint Soulbound Token
             </button>
         );
     };
-    
+
     const MintTree = () => {
         const [isClicked, setIsClicked] = useState(false);
-    
+
         const handleClick = () => {
             setIsClicked(true);
         };
-    
+
         const buttonStyle = {
-            width: '280px',
+            width: '300px',
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            marginLeft: '140px',
+            marginTop: '-370px',
             fontSize: '25px',
+            margin: '27px',
             marginBottom: '20px',
             backgroundColor: isClicked ? '#A5E84D' : '',
         };
-    
+
         return (
-            <button style={buttonStyle} onClick={mintTreeAsync}>
+            <button style={buttonStyle} onClick={handleClick}>
                 Mint NFTree
             </button>
         );
     };
 
+    const DonateButton = () => {
+        const [isClicked, setIsClicked] = useState(false);
+        const { address } = useAccount();
+        const { balance } = useAccountBalance(address);
+        const { chain: ConnectedChain } = useNetwork();
+        const [loading, setLoading] = useState(false);
+        const provider = getLocalProvider(localhost);
+        const signer = provider?.getSigner();
+        const faucetTxn = useTransactor(signer);
+      
+        const sendETH = async () => {
+          setIsClicked(true);
+          try {
+            setLoading(true);
+            await faucetTxn({ to: address, value: utils.parseEther(NUM_OF_ETH) });
+            setLoading(false);
+          } catch (error) {
+            console.error("⚡️ ~ file: FaucetButton.tsx:sendETH ~ error", error);
+            setLoading(false);
+          }
+        };
+      
+        const buttonStyle = {
+          width: '300px',
+          height: '70px',
+          boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+          borderRadius: '45px',
+          margin: '27px',
+          marginTop: '-370px',
+          fontSize: '25px',
+          marginBottom: '20px',
+          backgroundColor: isClicked ? '#A5E84D' : '',
+        };
+      
+        // Render only on local chain
+        if (!ConnectedChain || ConnectedChain.id !== hardhat.id) {
+          return null;
+        }
+      
+        return (
+          <button style={buttonStyle} onClick={sendETH}>
+              Donate
+          </button>
+        );
+      };
+
+    const Points = () => {
+
+        const buttonStyle = {
+            width: '300px',
+            height: '70px',
+            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+            borderRadius: '45px',
+            marginTop: '-370px',
+            fontSize: '25px',
+            marginBottom: '20px',
+            backgroundColor: '',
+        };
+
+        return (
+            <div style={buttonStyle}>
+                Points:
+            </div>
+        );
+    };
+
+
+    const handleProof = (result: ISuccessResult) => {
+        return new Promise<void>((resolve) => {
+            setTimeout(() => resolve(), 3000);
+            // NOTE: Example of how to decline the verification request and show an error message to the user
+        });
+    };
+
+    const onSuccess = (result: ISuccessResult) => {
+        console.log(result);
+    };
+
+    const app_id_key = "app_746b524e1d3b0eaf005e9c78835ec0d8";
+
     return (
         <>
             <MetaHeader />
-            <div className="bg-[url('../components/example-ui/assets/background.svg')]">
-
-            </div>
-            <div className="flex items-center flex-row flex-grow pt-0" data-theme="exampleUi">
+            <div className="flex items-center flex-row flex-grow pt-10" data-theme="exampleUi">
                 <div className="flex flex-col flex-grow">
-                    {/* <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>World ID Sign In</button> */}
-                    <WorldButton />
-                    <MintButton />
-                    <DonateButton />
-                    <MintTree />
-                    {/* <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Log a Bike Ride</button>
-          <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Document Gardening</button>
-          <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Carpool to Work</button> */}
-
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <WorldButton />
+                        <MintButton />
+                        <DonateButton />
+                        <MintTree />
+                        <Points />
+                    </div>
                 </div>
-
             </div>
             <div className="col-span-2 lg:col-span-3 flex flex-col gap-6">
                 <div className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}>

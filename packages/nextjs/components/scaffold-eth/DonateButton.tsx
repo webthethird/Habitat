@@ -34,11 +34,12 @@ export const DonateButton = () => {
   };
 
   const buttonStyle = {
-    width: '280px',
+    width: '300px',
     height: '70px',
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
     borderRadius: '45px',
-    marginLeft: '140px',
+    margin: '27px',
+    marginTop: '-370px',
     fontSize: '25px',
     marginBottom: '20px',
     backgroundColor: isClicked ? '#A5E84D' : '',
