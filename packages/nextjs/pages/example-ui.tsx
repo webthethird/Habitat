@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useState } from "react";
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { useAccount } from "wagmi";
 import { ArrowSmallRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -53,6 +53,12 @@ const ExampleUI: NextPage = () => {
         },
     });
 
+    const { data: greenPoints } = useScaffoldContractRead({
+        contractName: "HabitatNFT",
+        functionName: "greenPoints",
+        args: [address]
+    })
+
     return (
         <>
             <MetaHeader
@@ -73,33 +79,11 @@ const ExampleUI: NextPage = () => {
                     <div className="col-span-2 lg:col-span-1 flex flex-col gap-6">
                         <div className="flex bg-base-300 relative pb-10">
                             <div className="flex flex-col w-full mx-5 sm:mx-8 2xl:mx-20">
-                                <div className={`mt-10 flex gap-2 ${visible ? "" : "invisible"} max-w-2xl`}>
-                                    <div className="flex gap-5 bg-base-200 bg-opacity-80 z-0 p-7 rounded-2xl shadow-lg">
-                                        <span className="text-3xl">👋🏻</span>
-                                        <div>
-                                            <div>
-                                                In this page you can see how some of our <strong>hooks & components</strong> work, and how you can bring
-                                                them to life with your own design! Have fun and try it out!
-                                            </div>
-                                            <div className="mt-2">
-                                                Check out{" "}
-                                                <code className="italic bg-base-300 text-base font-bold [word-spacing:-0.5rem]">
-                                                    packages / nextjs/pages / example-ui.tsx
-                                                </code>{" "}
-                                                and its underlying components.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        className="btn btn-circle btn-ghost h-6 w-6 bg-base-200 bg-opacity-80 z-0 min-h-0 drop-shadow-md"
-                                        onClick={() => setVisible(false)}
-                                    >
-                                        <XMarkIcon className="h-4 w-4" />
-                                    </button>
-                                </div>
                                 {baseId ?
                                     <div className="flex flex-col mt-6 px-7 py-8 bg-base-200 opacity-80 rounded-2xl shadow-lg border-2 border-primary">
                                         <span className="text-4xl sm:text-6xl text-black">Mint an NFTree</span>
+
+                                        <span className="text-2xl sm:text-3xl text-green">You have {greenPoints ? (utils.formatEther(greenPoints.mul(100)))?.toString() : "0"} points</span>
 
                                         <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5">
                                             <input
