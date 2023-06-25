@@ -5,22 +5,48 @@ import "./SingleOwnershipSoulbound.sol";
 import "./NFTree.sol";
 import "./interfaces/IERC4883.sol";
 import "./interfaces/IERC6551Registry.sol";
+import "./DonationEASResolver.sol";
 
 contract HabitatNFT is SingleOwnershipSoulbound, IERC4883 {
     IERC6551Registry private constant ERC_6551_REGISTRY = IERC6551Registry(0x02101dfB77FDE026414827Fdc604ddAF224F0921);
     address private constant ERC_6551_IMPL = 0x2D25602551487C3f3354dD80D76D54383A243358;
-    NFTree public nftree;
     uint256 private immutable CHAIN = block.chainid;
+    address public immutable donationResolver;
+    uint256 public constant pointsDecimals = 16;
 
+    NFTree public nftree;
     string public baseSVG;
     mapping(uint256 => address) public erc6551Accounts;
+    mapping(address => uint256) public greenPoints;
 
-    constructor(string memory _baseSVG) SingleOwnershipSoulbound("Habitat NFT", "HAB") {
+    modifier onlyResolver(address sender) {
+        require(sender == donationResolver, "Only registered EAS Resolver allowed");
+        _;
+    }
+    
+    modifier onlyNFTree(address sender) {
+        require(sender == address(nftree), "Only NFTree allowed");
+        _;
+    }
+
+    constructor(string memory _baseSVG, address _resolver) SingleOwnershipSoulbound("Habitat NFT", "HAB") {
         baseSVG = _baseSVG;
+        donationResolver = _resolver;
+        DonationEASResolver(payable(donationResolver)).setHabitatNFT(address(this));
     }
 
     function setNFTree(address _nftree) public {
         nftree = NFTree(_nftree);
+    }
+
+    function grantGreenPoints(address recipient, uint256 amount) external onlyResolver(_msgSender()) {
+        require(balanceOf(recipient) > 0, "Recipient must own a Habitat NFT");
+        greenPoints[recipient] += amount;
+    }
+
+    function burnGreenPoints(address owner, uint256 amount) external onlyNFTree(_msgSender()) {
+        require(greenPoints[owner] >= amount, "Not enough points to burn");
+        greenPoints[owner] -= amount;
     }
 
     function renderTokenById(uint256 id) external view override returns (string memory) {

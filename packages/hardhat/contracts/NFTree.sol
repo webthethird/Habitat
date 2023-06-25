@@ -8,7 +8,13 @@ import "./HabitatNFT.sol";
 
 
 contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
+    uint256 public constant POINTS_TO_MINT = 10;
     HabitatNFT public habitat;
+
+    modifier hasEnoughPoints(address sender) {
+        require(habitat.greenPoints(sender) / (10**habitat.pointsDecimals()) >= POINTS_TO_MINT, "Not enough green points to mint");
+        _;
+    }
 
     constructor() ERC721("NFTree", "Tree") {
         
@@ -29,11 +35,11 @@ contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
         return ERC721URIStorage.tokenURI(tokenId);
     }
 
-    function mint(string memory svg, uint256 habitatId) public virtual {
+    function mint(string memory svg, uint256 habitatId) public virtual hasEnoughPoints(_msgSender()) {
         uint256 newId = totalSupply();
         address hab_account = habitat.erc6551Accounts(habitatId);
         require(hab_account != address(0), "HabitatNFT with given ID has no account");
-
+        habitat.burnGreenPoints(_msgSender(), POINTS_TO_MINT * (10**habitat.pointsDecimals()));
         _beforeTokenTransfer(address(0), hab_account, newId, 1);
         _mint(hab_account, newId);
         _setTokenURI(newId, svg);
