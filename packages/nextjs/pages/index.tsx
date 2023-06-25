@@ -222,7 +222,7 @@ const Home: NextPage = () => {
     return (
         <>
             <MetaHeader />
-            <div className="flex items-center flex-row flex-grow pt-10" data-theme="exampleUi">
+            <div className="flex items-center flex-row flex-grow pt-10" style={{ backgroundColor: '#e1edf0' }} data-theme="exampleUi">
                 <div className="flex flex-col flex-grow">
                     <div className="flex justify-around">
                         <WorldButton />
