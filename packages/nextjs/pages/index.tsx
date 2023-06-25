@@ -113,7 +113,7 @@ const Home: NextPage = () => {
             // margin: '27px',
             // marginTop: '-370px',
             fontSize: '25px',
-            backgroundColor: isClicked ? '#A5E84D' : '',
+            backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
         };
 
         return (
@@ -146,7 +146,7 @@ const Home: NextPage = () => {
             fontSize: '25px',
             // margin: '27px',
             // marginBottom: '20px',
-            backgroundColor: isClicked ? '#A5E84D' : '',
+            backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
         };
 
         return (
@@ -172,7 +172,7 @@ const Home: NextPage = () => {
             fontSize: '25px',
             // margin: '27px',
             // marginBottom: '20px',
-            backgroundColor: isClicked ? '#A5E84D' : '',
+            backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
         };
 
         return (
@@ -182,51 +182,6 @@ const Home: NextPage = () => {
         );
     };
 
-    // const DonateButton = () => {
-    //     const [isClicked, setIsClicked] = useState(false);
-    //     const { address } = useAccount();
-    //     const { balance } = useAccountBalance(address);
-    //     const { chain: ConnectedChain } = useNetwork();
-    //     const [loading, setLoading] = useState(false);
-    //     const provider = getLocalProvider(localhost);
-    //     const signer = provider?.getSigner();
-    //     const faucetTxn = useTransactor(signer);
-      
-    //     const sendETH = async () => {
-    //       setIsClicked(true);
-    //       try {
-    //         setLoading(true);
-    //         await faucetTxn({ to: address, value: utils.parseEther(NUM_OF_ETH) });
-    //         setLoading(false);
-    //       } catch (error) {
-    //         console.error("⚡️ ~ file: FaucetButton.tsx:sendETH ~ error", error);
-    //         setLoading(false);
-    //       }
-    //     };
-      
-    //     const buttonStyle = {
-    //       width: '300px',
-    //       height: '70px',
-    //       boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-    //       borderRadius: '45px',
-    //     //   margin: '27px',
-    //     //   marginTop: '-370px',
-    //       fontSize: '25px',
-    //     //   marginBottom: '20px',
-    //       backgroundColor: isClicked ? '#A5E84D' : '',
-    //     };
-      
-    //     // Render only on local chain
-    //     if (!ConnectedChain || ConnectedChain.id !== hardhat.id) {
-    //       return null;
-    //     }
-      
-    //     return (
-    //       <button style={buttonStyle} onClick={sendETH}>
-    //           Donate
-    //       </button>
-    //     );
-    //   };
 
     const Points = () => {
 
@@ -238,12 +193,12 @@ const Home: NextPage = () => {
             // marginTop: '-370px',
             fontSize: '25px',
             // marginBottom: '20px',
-            backgroundColor: '',
+            backgroundColor: '#FFFFFF',
         };
 
         return (
             <div className="text-center">
-                <div style={buttonStyle}>
+                <div style={buttonStyle} className="underline">
                     Points: {greenPoints ? (utils.formatEther(greenPoints.mul(100)))?.toString() : "0"}
                 </div>
             </div>

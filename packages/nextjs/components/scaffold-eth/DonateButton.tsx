@@ -70,7 +70,7 @@ export const DonateButton = () => {
         // marginTop: '-370px',
         fontSize: '25px',
         // marginBottom: '20px',
-        backgroundColor: isClicked ? '#A5E84D' : '',
+        backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
     };
 
     //   // Render only on local chain
