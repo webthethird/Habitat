@@ -36,6 +36,20 @@ contract HabitatNFT is SingleOwnershipSoulbound, IERC4883 {
         return svg;
     }
 
+    function renderTokenByOwner(address owner) external view returns (string memory) {
+        uint256 id = tokenOfOwnerByIndex(owner, 0);
+        address account = erc6551Accounts[id];
+        uint256 treeCount = nftree.balanceOf(account);
+        string memory svg = baseSVG;
+        for (uint i = 0; i < treeCount; i++) {
+            uint256 treeId = nftree.tokenOfOwnerByIndex(account, i);
+            string memory treeSvg = nftree.renderTokenById(treeId);
+            svg = string.concat(svg, treeSvg);
+        }
+        svg = string.concat(svg, "</svg>");
+        return svg;
+    }
+
     function mint() public override ifNoBalance(_msgSender()) {
         uint256 newId = totalSupply();
         super.mint();
