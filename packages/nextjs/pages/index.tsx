@@ -150,7 +150,7 @@ const Home: NextPage = () => {
         };
 
         return (
-            <button style={buttonStyle} onClick={handleClick}>
+            <button style={buttonStyle} onClick={mintHabitatAsync}>
                 Mint Soulbound Token
             </button>
         );
@@ -176,7 +176,7 @@ const Home: NextPage = () => {
         };
 
         return (
-            <button style={buttonStyle} onClick={handleClick}>
+            <button style={buttonStyle} onClick={mintTreeAsync}>
                 Mint NFTree
             </button>
         );
