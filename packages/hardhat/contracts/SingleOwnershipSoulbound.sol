@@ -13,7 +13,7 @@ contract SingleOwnershipSoulbound is ERC721Soulbound {
         _;
     }
 
-    function mint() public override ifNoBalance(_msgSender()) {
+    function mint() public virtual override ifNoBalance(_msgSender()) {
         super.mint();
     }
 }

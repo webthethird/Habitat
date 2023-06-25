@@ -4,10 +4,15 @@ pragma solidity ^0.8.0;
 import "./interfaces/IERC4883.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "./HabitatNFT.sol";
+
 
 contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
+    HabitatNFT public habitat;
 
-    constructor() ERC721("NFTree", "Tree") {}
+    constructor(address _habitat) ERC721("NFTree", "Tree") {
+        habitat = HabitatNFT(_habitat);
+    }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721Enumerable, IERC165) returns (bool) {
         return interfaceId == type(IERC721Enumerable).interfaceId || interfaceId == type(IERC165).interfaceId || interfaceId == type(IERC4883).interfaceId || super.supportsInterface(interfaceId);
@@ -20,10 +25,13 @@ contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
         return ERC721URIStorage.tokenURI(tokenId);
     }
 
-    function mint(address to, string memory svg) public virtual {
+    function mint(string memory svg, uint256 habitatId) public virtual {
         uint256 newId = totalSupply();
-        _beforeTokenTransfer(address(0), to, newId, 1);
-        _safeMint(_msgSender(), newId);
+        address hab_account = habitat.erc6551Accounts(habitatId);
+        require(hab_account != address(0), "HabitatNFT with given ID has no account");
+
+        _beforeTokenTransfer(address(0), hab_account, newId, 1);
+        _safeMint(hab_account, newId);
         _setTokenURI(newId, svg);
     }
 
