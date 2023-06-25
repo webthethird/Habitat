@@ -39,7 +39,7 @@ export const DonateButton = () => {
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
     borderRadius: '45px',
     margin: '27px',
-    marginTop: '-330px',
+    marginTop: '-370px',
     fontSize: '25px',
     marginBottom: '20px',
     backgroundColor: isClicked ? '#A5E84D' : '',
