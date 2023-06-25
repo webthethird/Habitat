@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import React, { FC, useState } from 'react';
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import { DonateButton } from "~~/components/scaffold-eth";
 
 // const WorldButton = () => {
 //   const [isClicked, setIsClicked] = useState(false);
@@ -51,13 +52,13 @@ const WorldButton = () => {
   const action = urlParams.get("action") ?? "";
 
   const buttonStyle = {
-    width: '280px',
+    width: '300px',
     height: '70px',
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
     borderRadius: '45px',
-    marginLeft: '140px',
+    margin: '27px',
+    marginTop: '-330px',
     fontSize: '25px',
-    marginBottom: '20px',
     backgroundColor: isClicked ? '#A5E84D' : '',
   };
 
@@ -75,33 +76,6 @@ const WorldButton = () => {
 };
 
 
-
-const DonateButton = () => {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(true);
-  };
-
-  const buttonStyle = {
-    width: '280px',
-    height: '70px',
-    boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '45px',
-    marginLeft: '140px',
-    fontSize: '25px',
-    marginBottom: '20px',
-    backgroundColor: isClicked ? '#A5E84D' : '',
-  };
-
-  return (
-    <button style={buttonStyle} onClick={handleClick}>
-      Donate
-    </button>
-  );
-};
-
-
 const MintButton = () => {
   const [isClicked, setIsClicked] = useState(false);
 
@@ -110,12 +84,13 @@ const MintButton = () => {
   };
 
   const buttonStyle = {
-    width: '280px',
+    width: '300px',
     height: '70px',
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
     borderRadius: '45px',
-    marginLeft: '140px',
+    marginTop: '-330px',
     fontSize: '25px',
+    margin: '27px',
     marginBottom: '20px',
     backgroundColor: isClicked ? '#A5E84D' : '',
   };
@@ -135,12 +110,13 @@ const MintTree = () => {
   };
 
   const buttonStyle = {
-    width: '280px',
+    width: '300px',
     height: '70px',
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
     borderRadius: '45px',
-    marginLeft: '140px',
+    marginTop: '-330px',
     fontSize: '25px',
+    margin: '27px',
     marginBottom: '20px',
     backgroundColor: isClicked ? '#A5E84D' : '',
   };
@@ -151,6 +127,28 @@ const MintTree = () => {
     </button>
   );
 };
+
+
+const Points = () => {
+
+  const buttonStyle = {
+    width: '300px',
+    height: '70px',
+    boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+    borderRadius: '45px',
+    marginTop: '-330px',
+    fontSize: '25px',
+    marginBottom: '20px',
+    backgroundColor: '',
+  };
+
+  return (
+    <div style={buttonStyle}>
+      Points: 
+    </div>
+  );
+};
+
 
 const handleProof = (result: ISuccessResult) => {
   return new Promise<void>((resolve) => {
@@ -171,19 +169,13 @@ const Home: NextPage = () => {
       <MetaHeader />
       <div className="flex items-center flex-row flex-grow pt-10" data-theme="exampleUi">
         <div className="flex flex-col flex-grow">
-          {/* <IDKitWidget
-            action={action}
-            onSuccess={onSuccess}
-            handleVerify={handleProof}
-            app_id={app_id_key}
-            credential_types={[CredentialType.Orb, CredentialType.Phone]}
-          >
-            {({ open }: {open: FC}) => <button onClick={open}>Verify with World ID</button>}
-          </IDKitWidget> */}
-          <WorldButton />
-          <MintButton />
-          <DonateButton />
-          <MintTree />
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <WorldButton />
+            <MintButton />
+            <DonateButton/>
+            <MintTree />
+            <Points/>
+          </div>
         </div>
       </div>
     </>
