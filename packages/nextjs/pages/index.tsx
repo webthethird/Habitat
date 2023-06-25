@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import React, { useState } from 'react';
+import { DonateButton } from "~~/components/scaffold-eth";
 
 const WorldButton = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -28,31 +29,6 @@ const WorldButton = () => {
   );
 };
 
-
-const DonateButton = () => {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(true);
-  };
-
-  const buttonStyle = {
-    width: '280px',
-    height: '70px',
-    boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '45px',
-    marginLeft: '140px',
-    fontSize: '25px',
-    marginBottom: '20px',
-    backgroundColor: isClicked ? '#A5E84D' : '',
-  };
-
-  return (
-    <button style={buttonStyle} onClick={handleClick}>
-      Donate
-    </button>
-  );
-};
 
 
 const MintButton = () => {
