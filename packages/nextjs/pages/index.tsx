@@ -242,8 +242,10 @@ const Home: NextPage = () => {
         };
 
         return (
-            <div style={buttonStyle}>
-                Points:
+            <div className="text-center">
+                <div style={buttonStyle}>
+                    Points: {greenPoints ? (utils.formatEther(greenPoints.mul(100)))?.toString() : "0"}
+                </div>
             </div>
         );
     };
