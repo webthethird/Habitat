@@ -3,206 +3,197 @@ import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import React, { useState } from 'react';
 import { DonateButton } from "~~/components/scaffold-eth";
-
-const WorldButton = () => {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(true);
-  };
-
-  const buttonStyle = {
-    width: '280px',
-    height: '70px',
-    boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '45px',
-    marginLeft: '140px',
-    fontSize: '25px',
-    marginBottom: '20px',
-    backgroundColor: isClicked ? '#A5E84D' : '',
-  };
-
-  return (
-    <button style={buttonStyle} onClick={handleClick}>
-      Verify World ID
-    </button>
-  );
-};
-
-
-
-const MintButton = () => {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(true);
-  };
-
-  const buttonStyle = {
-    width: '280px',
-    height: '70px',
-    boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '45px',
-    marginLeft: '140px',
-    fontSize: '25px',
-    marginBottom: '20px',
-    backgroundColor: isClicked ? '#A5E84D' : '',
-  };
-
-  return (
-    <button style={buttonStyle} onClick={handleClick}>
-      Mint Soulbound Token
-    </button>
-  );
-};
-
-const MintTree = () => {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(true);
-  };
-
-  const buttonStyle = {
-    width: '280px',
-    height: '70px',
-    boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '45px',
-    marginLeft: '140px',
-    fontSize: '25px',
-    marginBottom: '20px',
-    backgroundColor: isClicked ? '#A5E84D' : '',
-  };
-
-  return (
-    <button style={buttonStyle} onClick={handleClick}>
-      Mint NFTree
-    </button>
-  );
-};
-
+import { useAccount, useProvider } from "wagmi";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { BigNumber } from "ethers";
+import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 
 
 const Home: NextPage = () => {
-  return (
-    <>
-      <MetaHeader />
-      <div className="flex items-center flex-row flex-grow pt-10" data-theme="exampleUi">
-        <div className="flex flex-col flex-grow">
-          {/* <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>World ID Sign In</button> */}
-          <WorldButton />
-          <MintButton />
-          <DonateButton />
-          <MintTree/>
-          {/* <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Log a Bike Ride</button>
+    const { address } = useAccount();
+    const provider = useProvider();
+    const [visible, setVisible] = useState(true);
+    const [newSVG, setNewSVG] = useState("");
+    const [transitionEnabled, setTransitionEnabled] = useState(true);
+    const [isRightDirection, setIsRightDirection] = useState(false);
+    const [marqueeSpeed, setMarqueeSpeed] = useState(0);
+
+    const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e")
+    eas.connect(provider)
+
+    // Initialize SchemaEncoder with the schema string
+    const schemaEncoder = new SchemaEncoder("address donation_from, address donation_to, bytes32 donation_tx, uint256 donation_value");
+    const encodedData = schemaEncoder.encodeData([
+        { name: "eventId", value: 1, type: "uint256" },
+        { name: "voteIndex", value: 1, type: "uint8" },
+    ]);
+
+    const { data: baseId } = useScaffoldContractRead({
+        contractName: "HabitatNFT",
+        functionName: "tokenOfOwnerByIndex",
+        args: [
+            address,
+            BigNumber.from(0)
+        ]
+    })
+
+    const { data: baseSVG } = useScaffoldContractRead({
+        contractName: "HabitatNFT",
+        functionName: "renderTokenByOwner",
+        args: [address]
+    })
+
+    const { writeAsync: mintTreeAsync, isLoading } = useScaffoldContractWrite({
+        contractName: "NFTree",
+        functionName: "mint",
+        args: [
+            `<path d="M644.711 506.225V376.003C644.711 369.104 639.7 363.511 633.518 363.511H627.137C620.955 363.511 615.944 369.104 615.944 376.003V506.225H644.711Z" fill="#7C4D29"/>
+            <path opacity="0.6" d="M644.711 482.168V373.897C644.711 368.161 639.7 363.511 633.518 363.511H627.137C620.955 363.511 615.944 368.161 615.944 373.897V482.167H644.711V482.168Z" fill="#56331B"/>
+            <path d="M699.655 449.213C699.655 459.701 691.266 468.206 680.918 468.206H579.737C569.389 468.206 561 459.701 561 449.213V407.432C561 396.943 569.389 388.441 579.737 388.441H680.918C691.266 388.441 699.655 396.943 699.655 407.432V449.213Z" fill="#65AD18"/>
+            <path d="M680.918 388.441H579.737C569.389 388.441 561 396.943 561 407.432V427.689C561 438.178 569.389 446.682 579.737 446.682H680.918C691.266 446.682 699.655 438.178 699.655 427.689V407.432C699.655 396.943 691.266 388.441 680.918 388.441Z" fill="#7FC62E"/>
+            <path d="M590.823 417.561C590.823 419.659 589.145 421.359 587.076 421.359H573.647C571.578 421.359 569.9 419.659 569.9 417.561C569.9 415.463 571.578 413.762 573.647 413.762H587.076C589.145 413.762 590.823 415.464 590.823 417.561Z" fill="#A5E84D"/>
+            <path d="M607.687 435.286C607.687 437.384 606.009 439.085 603.94 439.085H590.512C588.443 439.085 586.765 437.384 586.765 435.286C586.765 433.189 588.443 431.488 590.512 431.488H603.94C606.009 431.488 607.687 433.19 607.687 435.286Z" fill="#A5E84D"/>
+            <path d="M658.98 421.359C658.98 423.457 657.301 425.157 655.233 425.157H641.805C639.734 425.157 638.057 423.457 638.057 421.359C638.057 419.262 639.734 417.561 641.805 417.561H655.233C657.301 417.561 658.98 419.263 658.98 421.359Z" fill="#65AD18"/>
+            <path d="M689.115 425.158C689.115 427.257 688.05 428.955 686.737 428.955H678.22C676.907 428.955 675.843 427.257 675.843 425.158C675.843 423.061 676.907 421.36 678.22 421.36H686.737C688.05 421.359 689.115 423.061 689.115 425.158Z" fill="#65AD18"/>
+            <path d="M612.527 407.432C612.527 409.53 611.299 411.231 609.786 411.231H599.966C598.452 411.231 597.225 409.53 597.225 407.432C597.225 405.335 598.452 403.634 599.966 403.634H609.786C611.299 403.634 612.527 405.335 612.527 407.432Z" fill="#A5E84D"/>
+            <path d="M688.256 369.076C688.256 379.566 679.867 388.069 669.519 388.069H591.136C580.788 388.069 572.399 379.565 572.399 369.076V344.388C572.399 333.899 580.788 325.396 591.136 325.396H669.519C679.867 325.396 688.256 333.899 688.256 344.388V369.076Z" fill="#65AD18"/>
+            <path d="M669.519 325.396H591.136C580.788 325.396 572.399 333.899 572.399 344.388V347.553C572.399 358.041 580.788 366.544 591.136 366.544H669.519C679.867 366.544 688.256 358.041 688.256 347.553V344.388C688.256 333.899 679.867 325.396 669.519 325.396Z" fill="#7FC62E"/>
+            <path d="M606.711 346.287C606.711 348.384 605.032 350.086 602.963 350.086H589.535C587.465 350.086 585.787 348.384 585.787 346.287C585.787 344.189 587.465 342.489 589.535 342.489H602.963C605.032 342.489 606.711 344.189 606.711 346.287Z" fill="#A5E84D"/>
+            <path d="M674.867 350.086C674.867 352.184 673.188 353.884 671.12 353.884H657.691C655.621 353.884 653.944 352.184 653.944 350.086C653.944 347.988 655.622 346.287 657.691 346.287H671.12C673.189 346.287 674.867 347.987 674.867 350.086Z" fill="#65AD18"/>
+            <path d="M628.415 336.157C628.415 338.255 627.187 339.957 625.674 339.957H615.854C614.341 339.957 613.114 338.255 613.114 336.157C613.114 334.061 614.341 332.359 615.854 332.359H625.674C627.187 332.359 628.415 334.061 628.415 336.157Z" fill="#A5E84D"/>
+            <path d="M674.047 306.552C674.047 317.04 665.658 325.544 655.31 325.544H605.344C594.996 325.544 586.607 317.04 586.607 306.552V291.992C586.607 281.502 594.996 273 605.344 273H655.31C665.658 273 674.047 281.503 674.047 291.992V306.552Z" fill="#65AD18"/>
+            <path d="M605.344 273C595.206 273 586.953 281.164 586.623 291.359C586.952 301.553 595.205 309.717 605.344 309.717H655.31C665.448 309.717 673.701 301.553 674.031 291.359C673.701 281.164 665.448 273 655.31 273H605.344Z" fill="#7FC62E"/>
+            <path d="M635.792 294.207C635.792 296.304 634.114 298.005 632.045 298.005H618.617C616.548 298.005 614.87 296.304 614.87 294.207C614.87 292.109 616.548 290.409 618.617 290.409H632.045C634.114 290.409 635.792 292.109 635.792 294.207Z" fill="#A5E84D"/>
+            <path d="M619.241 282.496C619.241 284.593 618.014 286.294 616.5 286.294H606.68C605.166 286.294 603.939 284.593 603.939 282.496C603.939 280.399 605.166 278.697 606.68 278.697H616.5C618.014 278.697 619.241 280.398 619.241 282.496Z" fill="#A5E84D"/>`,
+            baseId
+        ],
+        // value: "0.01",
+        onBlockConfirmation: txnReceipt => {
+            console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+        },
+    });
+
+    const { writeAsync: mintHabitatAsync } = useScaffoldContractWrite({
+        contractName: "HabitatNFT",
+        functionName: "mint",
+        // value: "0.01",
+        onBlockConfirmation: txnReceipt => {
+            console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+            // setNewSVG()
+        },
+    });
+
+    const { data: greenPoints } = useScaffoldContractRead({
+        contractName: "HabitatNFT",
+        functionName: "greenPoints",
+        args: [address]
+    })
+
+    const WorldButton = () => {
+        const [isClicked, setIsClicked] = useState(false);
+    
+        const handleClick = () => {
+            setIsClicked(true);
+        };
+    
+        const buttonStyle = {
+            width: '280px',
+            height: '70px',
+            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+            borderRadius: '45px',
+            marginLeft: '140px',
+            fontSize: '25px',
+            marginBottom: '20px',
+            backgroundColor: isClicked ? '#A5E84D' : '',
+        };
+    
+        return (
+            <button style={buttonStyle} onClick={handleClick}>
+                Verify World ID
+            </button>
+        );
+    };
+    
+    
+    
+    const MintButton = () => {
+        const [isClicked, setIsClicked] = useState(false);
+    
+        const handleClick = () => {
+            setIsClicked(true);
+            mintHabitatAsync;
+        };
+    
+        const buttonStyle = {
+            width: '280px',
+            height: '70px',
+            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+            borderRadius: '45px',
+            marginLeft: '140px',
+            fontSize: '25px',
+            marginBottom: '20px',
+            backgroundColor: isClicked ? '#A5E84D' : '',
+        };
+    
+        return (
+            <button style={buttonStyle} onClick={mintHabitatAsync}>
+                Mint Soulbound Token
+            </button>
+        );
+    };
+    
+    const MintTree = () => {
+        const [isClicked, setIsClicked] = useState(false);
+    
+        const handleClick = () => {
+            setIsClicked(true);
+        };
+    
+        const buttonStyle = {
+            width: '280px',
+            height: '70px',
+            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+            borderRadius: '45px',
+            marginLeft: '140px',
+            fontSize: '25px',
+            marginBottom: '20px',
+            backgroundColor: isClicked ? '#A5E84D' : '',
+        };
+    
+        return (
+            <button style={buttonStyle} onClick={mintTreeAsync}>
+                Mint NFTree
+            </button>
+        );
+    };
+
+    return (
+        <>
+            <MetaHeader />
+            <div className="bg-[url('../components/example-ui/assets/background.svg')]">
+
+            </div>
+            <div className="flex items-center flex-row flex-grow pt-0" data-theme="exampleUi">
+                <div className="flex flex-col flex-grow">
+                    {/* <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>World ID Sign In</button> */}
+                    <WorldButton />
+                    <MintButton />
+                    <DonateButton />
+                    <MintTree />
+                    {/* <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Log a Bike Ride</button>
           <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Document Gardening</button>
           <button style={{width:'270px', height: '70px', boxShadow:'0px 8px 15px rgba(0, 0, 0, 0.1)', borderRadius:'45px', marginLeft:'140px', fontSize:'25px', marginBottom:'20px'}}>Carpool to Work</button> */}
 
-        </div>
-        {/* <div className="bottom-div">
-          <svg width="100%" height="100%" viewBox="0 0 379 575" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '-240px'}}>
-            <path
-              d="M289.805 574.999V252.609C289.805 235.527 275.959 221.681 258.879 221.681H241.254C224.173 221.681 210.326 235.527 210.326 252.609V574.999H289.805Z"
-              fill="#7C4D29"
-            />
-            <path
-              d="M266.972 373.72H141.344V162.404C141.344 151.777 132.732 143.165 122.108 143.165C111.482 143.165 102.872 151.777 102.872 162.404V392.959C102.872 401.914 109.003 409.421 117.293 411.565C118.836 411.96 120.442 412.198 122.108 412.198H266.972V373.72Z"
-              fill="#7C4D29"
-            />
-            <g opacity="0.6">
-              <path
-                d="M289.805 313.595V252.609C289.805 235.527 275.959 221.681 258.879 221.681H241.254C224.173 221.681 210.326 235.527 210.326 252.609V313.595H289.805Z"
-                fill="#56331B"
-              />
-              <path
-                d="M141.344 352.419V162.404C141.344 151.777 132.732 143.165 122.108 143.165C111.482 143.165 102.872 151.777 102.872 162.404V352.419H141.344Z"
-                fill="#56331B"
-              />
-            </g>
-            <path
-              d="M378.449 220.841C378.449 253.222 352.196 279.472 319.82 279.472H157.608C125.227 279.472 98.9766 253.222 98.9766 220.841V58.6289C98.9766 26.2503 125.227 0 157.608 0H319.82C352.198 0 378.449 26.2503 378.449 58.6289V220.841Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.4"
-              d="M188.387 71.3337C188.387 77.8073 183.137 83.0574 176.661 83.0574H134.644C128.168 83.0574 122.918 77.8073 122.918 71.3337C122.918 64.8548 128.168 59.6074 134.644 59.6074H176.663C183.137 59.6074 188.387 64.8548 188.387 71.3337Z"
-              fill="#65AD18"
-            />
-            <path
-              d="M319.818 0H157.606C125.225 0 98.9746 26.2503 98.9746 58.6289V73.3111H194.523C226.901 73.3111 253.152 99.5642 253.152 131.943V220.841H319.818C352.196 220.841 378.447 194.59 378.447 162.212V58.6289C378.45 26.2503 352.196 0 319.818 0Z"
-              fill="#7FC62E"
-            />
-            <path
-              opacity="0.4"
-              d="M241.154 126.054C241.154 132.528 235.904 137.781 229.43 137.781H187.411C180.935 137.781 175.685 132.528 175.685 126.054C175.685 119.578 180.935 114.328 187.411 114.328H229.43C235.904 114.328 241.154 119.576 241.154 126.054Z"
-              fill="#65AD18"
-            />
-            <path
-              d="M322.259 180.775C322.259 187.246 317.009 192.501 310.532 192.501H268.513C262.037 192.501 256.787 187.249 256.787 180.775C256.787 174.296 262.037 169.049 268.513 169.049H310.532C317.009 169.051 322.259 174.299 322.259 180.775Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.4"
-              d="M256.301 40.0628C256.301 46.5364 252.461 51.7891 247.723 51.7891H216.997C212.259 51.7891 208.417 46.5364 208.417 40.0628C208.417 33.5866 212.259 28.3364 216.997 28.3364H247.723C252.461 28.3364 256.301 33.5866 256.301 40.0628Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.4"
-              d="M346.202 94.7834C346.202 101.26 342.363 106.51 337.627 106.51H306.899C302.161 106.51 298.321 101.257 298.321 94.7834C298.321 88.3072 302.161 83.0571 306.899 83.0571H337.627C342.36 83.0571 346.202 88.3072 346.202 94.7834Z"
-              fill="#65AD18"
-            />
-            <path
-              d="M221.416 279.293C221.416 304.944 200.618 325.742 174.964 325.742H46.4517C20.7973 325.742 0 304.944 0 279.293V150.778C0 125.123 20.7973 104.326 46.4517 104.326H174.964C200.618 104.326 221.416 125.123 221.416 150.778V279.293Z"
-              fill="#65AD18"
-            />
-            <path
-              d="M174.964 104.326H46.4517C20.7973 104.326 0 125.123 0 150.778V232.841C0 258.495 20.7973 279.293 46.4517 279.293H174.964C200.618 279.293 221.416 258.495 221.416 232.841V150.778C221.416 125.123 200.618 104.326 174.964 104.326Z"
-              fill="#7FC62E"
-            />
-            <path
-              opacity="0.4"
-              d="M70.839 160.841C70.839 165.97 66.678 170.131 61.5492 170.131H28.2583C23.1269 170.131 18.9658 165.97 18.9658 160.841C18.9658 155.71 23.1269 151.551 28.2583 151.551H61.5465C66.678 151.551 70.839 155.71 70.839 160.841Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.4"
-              d="M112.643 204.197C112.643 209.326 108.482 213.487 103.353 213.487H70.0623C64.9335 213.487 60.7725 209.326 60.7725 204.197C60.7725 199.066 64.9335 194.907 70.0623 194.907H103.353C108.482 194.905 112.643 199.063 112.643 204.197Z"
-              fill="#65AD18"
-            />
-            <path
-              d="M176.899 247.553C176.899 252.679 172.741 256.84 167.609 256.84H134.321C129.19 256.84 125.031 252.681 125.031 247.553C125.031 242.419 129.192 238.26 134.321 238.26H167.609C172.741 238.258 176.899 242.416 176.899 247.553Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.4"
-              d="M124.643 136.067C124.643 141.196 121.6 145.357 117.848 145.357H93.5014C89.7491 145.357 86.7061 141.196 86.7061 136.067C86.7061 130.936 89.7464 126.777 93.5014 126.777H117.848C121.6 126.777 124.643 130.936 124.643 136.067Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.4"
-              d="M195.868 179.423C195.868 184.551 192.825 188.712 189.073 188.712H164.729C160.977 188.712 157.934 184.551 157.934 179.423C157.934 174.291 160.977 170.133 164.729 170.133H189.073C192.825 170.13 195.868 174.289 195.868 179.423Z"
-              fill="#65AD18"
-            />
-            <path
-              opacity="0.6"
-              d="M277.961 378.135C277.961 383.981 273.22 388.722 267.374 388.722C261.526 388.722 256.787 383.981 256.787 378.135V345.817C256.787 339.971 261.526 335.229 267.374 335.229C273.22 335.229 277.961 339.971 277.961 345.817V378.135Z"
-              fill="#56331B"
-            />
-            <path
-              opacity="0.6"
-              d="M277.961 445.612C277.961 451.458 273.22 456.197 267.374 456.197C261.526 456.197 256.787 451.458 256.787 445.612V413.294C256.787 407.446 261.526 402.705 267.374 402.705C273.22 402.705 277.961 407.446 277.961 413.294V445.612Z"
-              fill="#56331B"
-            />
-            <path
-              opacity="0.6"
-              d="M242.945 542.06C242.945 547.906 238.204 552.645 232.358 552.645C226.512 552.645 221.771 547.906 221.771 542.06V509.74C221.771 503.891 226.509 499.152 232.358 499.152C238.204 499.152 242.945 503.891 242.945 509.74V542.06Z"
-              fill="#56331B"
-            />
-          </svg>
-        </div> */}
-      </div>
-    </>
-  );
+                </div>
+
+            </div>
+            <div className="col-span-2 lg:col-span-3 flex flex-col gap-6">
+                <div className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}>
+                    <img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />
+                </div>
+            </div>
+        </>
+    );
 };
 
 export default Home;
