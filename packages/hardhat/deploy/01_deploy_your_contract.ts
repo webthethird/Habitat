@@ -70,7 +70,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
       <path d="M569.331 114.565C557.242 114.565 547.403 124.299 547.01 136.453C547.403 148.608 557.242 158.341 569.331 158.341H628.904C640.99 158.341 650.83 148.608 651.222 136.453C650.829 124.298 640.99 114.565 628.904 114.565H569.331Z" fill="#4DAFD6"/>
       <path d="M605.632 14.379 580.687 142.351 580.687 139.85C580.687 137.348 58239.85C605.632 142.35 603.632 144.379 601.163 144.379H585.154C582.686 14.686 135.322 585.154 135.322H601.163C603.632 135.322 605.632 137.349 605.632 139.85Z" fill="#73D2EF"/>
       <path d="M585.899 125.888C585.899 128.388 584.436 130.417 582.63 130.417H570.923C569.117 130.417 567.654 128.389 567.654 125.888C567.654 123.387 569.117 121.359 570.923 121.359H582.63C584.436 121.358 585.899 123.387 585.899 125.888Z" fill="#73D2EF"/>`,
-
+        "0x5Bd664bA084fc46786D9e199962BF50CdDE6879e"
     ],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
@@ -86,4 +86,4 @@ export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["ERC721Soulbound"];
+deployYourContract.tags = ["Tokens"];
