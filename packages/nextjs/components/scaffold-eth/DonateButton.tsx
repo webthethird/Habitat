@@ -38,17 +38,17 @@ export const DonateButton = () => {
     height: '70px',
     boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
     borderRadius: '45px',
-    margin: '27px',
-    marginTop: '-370px',
+    // margin: '27px',
+    // marginTop: '-370px',
     fontSize: '25px',
-    marginBottom: '20px',
+    // marginBottom: '20px',
     backgroundColor: isClicked ? '#A5E84D' : '',
   };
 
-  // Render only on local chain
-  if (!ConnectedChain || ConnectedChain.id !== hardhat.id) {
-    return null;
-  }
+//   // Render only on local chain
+//   if (!ConnectedChain || ConnectedChain.id !== hardhat.id) {
+//     return null;
+//   }
 
   return (
     <button style={buttonStyle} onClick={sendETH}>

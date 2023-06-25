@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import React, { FC, useState } from 'react';
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
-// import { DonateButton } from "~~/components/scaffold-eth";
+import { DonateButton } from "~~/components/scaffold-eth";
 import { useAccount, useProvider, useNetwork } from "wagmi";
 import { hardhat, localhost } from "wagmi/chains";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
@@ -102,31 +102,31 @@ const Home: NextPage = () => {
             setIsClicked(true);
         };
 
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const action = urlParams.get("action") ?? "";
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get("action") ?? "";
 
         const buttonStyle = {
             width: '300px',
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            margin: '27px',
-            marginTop: '-370px',
+            // margin: '27px',
+            // marginTop: '-370px',
             fontSize: '25px',
             backgroundColor: isClicked ? '#A5E84D' : '',
         };
 
-        // return (
-        //   <IDKitWidget
-        //     action={action}
-        //     onSuccess={onSuccess}
-        //     handleVerify={handleProof}
-        //     app_id={app_id_key}
-        //     credential_types={[CredentialType.Orb, CredentialType.Phone]}
-        //   >
-        //     {({ open }: { open: FC }) => <button style={buttonStyle} onClick={() => { open(); handleClick(); }}>Verify with World ID</button>}
-        //   </IDKitWidget>
-        // );
+        return (
+          <IDKitWidget
+            action={action}
+            onSuccess={onSuccess}
+            handleVerify={handleProof}
+            app_id={app_id_key}
+            credential_types={[CredentialType.Orb, CredentialType.Phone]}
+          >
+            {({ open }: { open: FC }) => <button style={buttonStyle} onClick={() => { open(); handleClick(); }}>Verify with World ID</button>}
+          </IDKitWidget>
+        );
     };
 
 
@@ -142,10 +142,10 @@ const Home: NextPage = () => {
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            marginTop: '-370px',
+            // marginTop: '-370px',
             fontSize: '25px',
-            margin: '27px',
-            marginBottom: '20px',
+            // margin: '27px',
+            // marginBottom: '20px',
             backgroundColor: isClicked ? '#A5E84D' : '',
         };
 
@@ -168,10 +168,10 @@ const Home: NextPage = () => {
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            marginTop: '-370px',
+            // marginTop: '-370px',
             fontSize: '25px',
-            margin: '27px',
-            marginBottom: '20px',
+            // margin: '27px',
+            // marginBottom: '20px',
             backgroundColor: isClicked ? '#A5E84D' : '',
         };
 
@@ -182,51 +182,51 @@ const Home: NextPage = () => {
         );
     };
 
-    const DonateButton = () => {
-        const [isClicked, setIsClicked] = useState(false);
-        const { address } = useAccount();
-        const { balance } = useAccountBalance(address);
-        const { chain: ConnectedChain } = useNetwork();
-        const [loading, setLoading] = useState(false);
-        const provider = getLocalProvider(localhost);
-        const signer = provider?.getSigner();
-        const faucetTxn = useTransactor(signer);
+    // const DonateButton = () => {
+    //     const [isClicked, setIsClicked] = useState(false);
+    //     const { address } = useAccount();
+    //     const { balance } = useAccountBalance(address);
+    //     const { chain: ConnectedChain } = useNetwork();
+    //     const [loading, setLoading] = useState(false);
+    //     const provider = getLocalProvider(localhost);
+    //     const signer = provider?.getSigner();
+    //     const faucetTxn = useTransactor(signer);
       
-        const sendETH = async () => {
-          setIsClicked(true);
-          try {
-            setLoading(true);
-            await faucetTxn({ to: address, value: utils.parseEther(NUM_OF_ETH) });
-            setLoading(false);
-          } catch (error) {
-            console.error("⚡️ ~ file: FaucetButton.tsx:sendETH ~ error", error);
-            setLoading(false);
-          }
-        };
+    //     const sendETH = async () => {
+    //       setIsClicked(true);
+    //       try {
+    //         setLoading(true);
+    //         await faucetTxn({ to: address, value: utils.parseEther(NUM_OF_ETH) });
+    //         setLoading(false);
+    //       } catch (error) {
+    //         console.error("⚡️ ~ file: FaucetButton.tsx:sendETH ~ error", error);
+    //         setLoading(false);
+    //       }
+    //     };
       
-        const buttonStyle = {
-          width: '300px',
-          height: '70px',
-          boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-          borderRadius: '45px',
-          margin: '27px',
-          marginTop: '-370px',
-          fontSize: '25px',
-          marginBottom: '20px',
-          backgroundColor: isClicked ? '#A5E84D' : '',
-        };
+    //     const buttonStyle = {
+    //       width: '300px',
+    //       height: '70px',
+    //       boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
+    //       borderRadius: '45px',
+    //     //   margin: '27px',
+    //     //   marginTop: '-370px',
+    //       fontSize: '25px',
+    //     //   marginBottom: '20px',
+    //       backgroundColor: isClicked ? '#A5E84D' : '',
+    //     };
       
-        // Render only on local chain
-        if (!ConnectedChain || ConnectedChain.id !== hardhat.id) {
-          return null;
-        }
+    //     // Render only on local chain
+    //     if (!ConnectedChain || ConnectedChain.id !== hardhat.id) {
+    //       return null;
+    //     }
       
-        return (
-          <button style={buttonStyle} onClick={sendETH}>
-              Donate
-          </button>
-        );
-      };
+    //     return (
+    //       <button style={buttonStyle} onClick={sendETH}>
+    //           Donate
+    //       </button>
+    //     );
+    //   };
 
     const Points = () => {
 
@@ -235,9 +235,9 @@ const Home: NextPage = () => {
             height: '70px',
             boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
             borderRadius: '45px',
-            marginTop: '-370px',
+            // marginTop: '-370px',
             fontSize: '25px',
-            marginBottom: '20px',
+            // marginBottom: '20px',
             backgroundColor: '',
         };
 
@@ -267,7 +267,7 @@ const Home: NextPage = () => {
             <MetaHeader />
             <div className="flex items-center flex-row flex-grow pt-10" data-theme="exampleUi">
                 <div className="flex flex-col flex-grow">
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div className="flex justify-around">
                         <WorldButton />
                         <MintButton />
                         <DonateButton />
