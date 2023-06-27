@@ -4,10 +4,11 @@ pragma solidity ^0.8.0;
 import "./interfaces/IERC4883.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./HabitatNFT.sol";
 
 
-contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
+contract NFTree is Ownable, ERC721Enumerable, ERC721URIStorage, IERC4883 {
     uint256 public constant POINTS_TO_MINT = 10;
     HabitatNFT public habitat;
 
@@ -16,11 +17,11 @@ contract NFTree is ERC721Enumerable, ERC721URIStorage, IERC4883 {
         _;
     }
 
-    constructor() ERC721("NFTree", "Tree") {
+    constructor() ERC721("NFTree", "Tree") Ownable() {
         
     }
 
-    function setHabitatNFT(address _habitat) public {
+    function setHabitatNFT(address _habitat) public onlyOwner {
         habitat = HabitatNFT(_habitat);
     }
 
