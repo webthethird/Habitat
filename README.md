@@ -1,3 +1,22 @@
+# Habitat 🌱 ETHGlobal Waterloo 2023
+
+Carbon dioxide levels in the atmosphere have been steadily rising since 1980 and are currently at an all time high. An onslaught of wildfires, new infrastructure, and pollution have resulted in the net loss of forest area worldwide. With the health of the planet deteriorating, most of us have found ourselves wondering how we can contribute to the survival of the earth with just our daily actions.
+
+Our application, Habitat, focuses on bridging the gap between environmental sustainability and the onchain universe. The goal is to motivate users to engage in sustainable behaviours and document regenerative transactions or actions that are already part of their daily lives by instilling fun competitiveness, and rewarding eco-preserving benefits such as planting real trees in the world. Habitat reaches its true potential when it is integrated as a sub-application to an existing core protocol or wallet, like Worldcoin, which allows the core application users to give back to the environment while making day-to-day transactions on the app.
+
+The application presents multiple activities considered ‘regenerative’ for the earth, such as donating to a charity or biking to work. Once a user verifies their World ID and completes an activity listed, the system uses Ethereum Attestation Service (EAS) to attest to both onchain and offchain regenerative activities. The completion of these activities grants users green energy points, which they can use towards acquiring an NFT tree with their soul bound token account. Each NFT tree minted will also be planted in real life, thus contributing to a greener, healthier planet. The product also has a key emphasis on fun competition, as users will be able to engage with friends and view the point progression of others. And for an extra kick of motivation, NFT tree holders are eligible to receive access to an exclusive community via Sismo, where they can track the location of their planted tree(s) and other rewards.
+
+## How it's Made
+This project uses Scaffold-ETH 2 as the template framework. We implemented World ID to ensure that each user interacting with the app is unique. We implemented tokenbound to represent the piece of land that users will eventually receive NFT trees on.
+
+We used several sponsor technologies, such as World ID, Ethereum Attestation Service, Sismo, Tokenbound & ERC-6551, and NounsDAO.
+
+- First, because we want to assure that only one Habitat (soulbound) NFT can be minted per person, we integrate World ID into our on-boarding process and prevent gaming the system.
+- Next, when the user creates their Habitat NFT, the mint function calls into the ERC-6551 account registry to create a new tokenbound account, allowing the NFT to hold its NFTrees. The Habitat NFT stores its own SVG data onchain, but when it owns NFTrees it will concatenate the SVG data of each tree, gradually accumulating a composed SVG forest.
+- In order to mint an NFTree to their Habitat, a user must receive an attestation for performing a “regenerative activity”, such as scanning a Presto card to take the bus, biking to work with BikeShare, or donating to an impact organization like TreeCanada. We registered a DonationAttestation schema to the EAS SchemaRegistry on Sepolia, which uses a custom Resolver contract. The DonationEASResolver is permitted to grant “green points” to a user via the Habitat NFT contract each time it receives an attestation, at a rate of 100 points per ETH. To mint an NFTree (and plant a real tree) a user must accumulate 10 green points.
+- Finally, once a user receives their first attestation, we use Sismo to connect to EAS as a data provider, which can then be used to gate users of the attestation.
+- Besides targeting individual users, Habitat is also aimed towards motivating communities, like the Nouns community to earn energy points collectively by doing more regenerative activities collectively. The benefit of such a feat would be that the Nouns community can plant a group of trees together which can potentially form the "Nouns forest", which can be monetized or used for further environmental efforts in the future.
+-------------------
 # 🏗 Scaffold-ETH 2
 
 🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
