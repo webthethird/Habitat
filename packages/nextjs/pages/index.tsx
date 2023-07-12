@@ -1,34 +1,31 @@
-import Link from "next/link";
+// import Link from "next/link";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import React, { FC, useState } from 'react';
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { DonateButton } from "~~/components/scaffold-eth";
-import { useAccount, useProvider, useNetwork } from "wagmi";
-import { hardhat, localhost } from "wagmi/chains";
-import { BanknotesIcon } from "@heroicons/react/24/outline";
-import { useScaffoldContractRead, useScaffoldContractWrite, useAccountBalance, useTransactor } from "~~/hooks/scaffold-eth";
+import { useAccount, useProvider, /* useNetwork */ } from "wagmi";
+// import { hardhat, localhost } from "wagmi/chains";
+// import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { useScaffoldContractRead, useScaffoldContractWrite, /* useAccountBalance, useTransactor */ } from "~~/hooks/scaffold-eth";
 import { BigNumber, utils } from "ethers";
-import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { getLocalProvider } from "~~/utils/scaffold-eth";
+import { EAS, /* SchemaEncoder */ } from "@ethereum-attestation-service/eas-sdk";
+// import { getLocalProvider } from "~~/utils/scaffold-eth";
 
-const NUM_OF_ETH = "1";
+// const NUM_OF_ETH = "1";
 
 
 const Home: NextPage = () => {
     const { address } = useAccount();
     const provider = useProvider();
-    const [visible, setVisible] = useState(true);
-    const [newSVG, setNewSVG] = useState("");
-    const [transitionEnabled, setTransitionEnabled] = useState(true);
-    const [isRightDirection, setIsRightDirection] = useState(false);
-    const [marqueeSpeed, setMarqueeSpeed] = useState(0);
+    // const [visible, setVisible] = useState(true);
+    // const [newSVG, setNewSVG] = useState("");
 
     const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e")
     eas.connect(provider)
 
     // Initialize SchemaEncoder with the schema string
-    const schemaEncoder = new SchemaEncoder("address donation_from, address donation_to, bytes32 donation_tx, uint256 donation_value");
+    // const schemaEncoder = new SchemaEncoder("address donation_from, address donation_to, bytes32 donation_tx, uint256 donation_value");
     // const encodedData = schemaEncoder.encodeData([
     //     { name: "eventId", value: 1, type: "uint256" },
     //     { name: "voteIndex", value: 1, type: "uint8" },
@@ -49,7 +46,7 @@ const Home: NextPage = () => {
         args: [address]
     })
 
-    const { writeAsync: mintTreeAsync, isLoading } = useScaffoldContractWrite({
+    const { writeAsync: mintTreeAsync, /* isLoading */ } = useScaffoldContractWrite({
         contractName: "NFTree",
         functionName: "mint",
         args: [
@@ -124,7 +121,7 @@ const Home: NextPage = () => {
             app_id={app_id_key}
             credential_types={[CredentialType.Orb, CredentialType.Phone]}
           >
-            {({ open }: { open: FC }) => <button style={buttonStyle} onClick={() => { open(); handleClick(); }}>Verify with World ID</button>}
+            {({ open }: { open: FC }) => <button style={buttonStyle} onClick={() => { open({}); handleClick(); }}>Verify with World ID</button>}
           </IDKitWidget>
         );
     };
@@ -150,7 +147,7 @@ const Home: NextPage = () => {
         };
 
         return (
-            <button style={buttonStyle} onClick={mintHabitatAsync}>
+            <button style={buttonStyle} onClick={() => {mintHabitatAsync(); handleClick();}}>
                 Mint Soulbound Token
             </button>
         );
@@ -176,7 +173,7 @@ const Home: NextPage = () => {
         };
 
         return (
-            <button style={buttonStyle} onClick={mintTreeAsync}>
+            <button style={buttonStyle} onClick={() => {mintTreeAsync(); handleClick();}}>
                 Mint NFTree
             </button>
         );
@@ -210,6 +207,7 @@ const Home: NextPage = () => {
         return new Promise<void>((resolve) => {
             setTimeout(() => resolve(), 3000);
             // NOTE: Example of how to decline the verification request and show an error message to the user
+            console.log(result);
         });
     };
 
@@ -235,7 +233,8 @@ const Home: NextPage = () => {
             </div>
             <div className="col-span-2 lg:col-span-3 flex flex-col gap-6">
                 <div className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}>
-                    <img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />
+                    {baseSVG ? (<img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />) : (<div></div>)}
+                    
                 </div>
             </div>
         </>
