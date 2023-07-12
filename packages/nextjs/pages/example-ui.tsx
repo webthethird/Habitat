@@ -4,16 +4,13 @@ import { useState } from "react";
 import { BigNumber, utils } from "ethers";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { useAccount } from "wagmi";
-import { ArrowSmallRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowSmallRightIcon } from "@heroicons/react/24/outline";
 
 
 const ExampleUI: NextPage = () => {
     const { address } = useAccount();
-    const [visible, setVisible] = useState(true);
+    // const [visible, setVisible] = useState(true);
     const [newSVG, setNewSVG] = useState("");
-    const [transitionEnabled, setTransitionEnabled] = useState(true);
-    const [isRightDirection, setIsRightDirection] = useState(false);
-    const [marqueeSpeed, setMarqueeSpeed] = useState(0);
 
     const { data: baseId } = useScaffoldContractRead({
         contractName: "HabitatNFT",
@@ -73,7 +70,7 @@ const ExampleUI: NextPage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-4 px-6 lg:px-10 lg:gap-12 w-full max-w-10xl my-0 ">
                     <div className="col-span-2 lg:col-span-3 flex flex-col gap-6">
                         <div className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}>
-                            <img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />
+                            {baseSVG ? (<img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />) : (<div></div>)}
                         </div>
                     </div>
                     <div className="col-span-2 lg:col-span-1 flex flex-col gap-6">

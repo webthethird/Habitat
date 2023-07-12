@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { ethers } from "ethers";
-import { useAccount, useNetwork, useSendTransaction, usePrepareSendTransaction, useProvider } from "wagmi";
-import { hardhat, localhost, sepolia } from "wagmi/chains";
-import { BanknotesIcon } from "@heroicons/react/24/outline";
-import { useAccountBalance, useTransactor } from "~~/hooks/scaffold-eth";
+import { useAccount, /* useNetwork, useSendTransaction, usePrepareSendTransaction, */ useProvider } from "wagmi";
+// import { hardhat, localhost, sepolia } from "wagmi/chains";
+// import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { /* useAccountBalance, */ useTransactor } from "~~/hooks/scaffold-eth";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { getLocalProvider } from "~~/utils/scaffold-eth";
+// import { getLocalProvider } from "~~/utils/scaffold-eth";
 
-const NUM_OF_ETH = "1";
+// const NUM_OF_ETH = "1";
 
 
 
@@ -18,8 +18,8 @@ export const DonateButton = () => {
     const [isClicked, setIsClicked] = useState(false);
     const { address } = useAccount();
     const provider = useProvider();
-    const { balance } = useAccountBalance(address);
-    const { chain: ConnectedChain } = useNetwork();
+    // const { balance } = useAccountBalance(address);
+    // const { chain: ConnectedChain } = useNetwork();
     const [loading, setLoading] = useState(false);
     const faucetTxn = useTransactor();
     const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e")
@@ -37,7 +37,7 @@ export const DonateButton = () => {
             setLoading(false);
             const encodedData = schemaEncoder.encodeData([
                 { name: "donation_to", value: "0x750EF1D7a0b4Ab1c97B7A623D7917CcEb5ea779C", type: "address" },
-                { name: "donation_from", value: address, type: "address" },
+                { name: "donation_from", value: address ? address : "", type: "address" },
                 { name: "donation_tx", value: "0x750EF1D7a0b4Ab1c97B7A623D7917CcEb5ea779C000000000000000000000000", type: "bytes32" },
                 { name: "donation_value", value: ethers.utils.parseEther("0.01"), type: "uint256" },
             ]);
@@ -45,7 +45,7 @@ export const DonateButton = () => {
             const tx = await eas.attest({
                 schema: schemaUID,
                 data: {
-                  recipient: address?.toString(),
+                  recipient: address ? address.toString() : "",
                   expirationTime: 0,
                   revocable: true,
                   data: encodedData,
@@ -79,7 +79,7 @@ export const DonateButton = () => {
     //   }
 
     return (
-        <button style={buttonStyle} onClick={sendETH}>
+        <button style={buttonStyle} onClick={ () => {loading ? sendETH : console.log("Loading, please wait...")}}>
             Donate
         </button>
     );
