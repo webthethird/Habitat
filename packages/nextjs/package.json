@@ -14,11 +14,15 @@
     "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true"
   },
   "dependencies": {
+    "@ethereum-attestation-service/eas-sdk": "^0.29.1",
     "@ethersproject/networks": "^5.7.1",
     "@ethersproject/web": "^5.7.1",
     "@heroicons/react": "^2.0.11",
     "@rainbow-me/rainbowkit": "^0.11.0",
+    "@tokenbound/sdk": "^0.3.0",
     "@uniswap/sdk": "^3.0.3",
+    "@web3uikit/core": "^1.1.5",
+    "@worldcoin/idkit": "^0.5.1",
     "daisyui": "^2.31.0",
     "ethers": "^5.0.0",
     "next": "^13.1.6",
