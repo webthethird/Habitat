@@ -8,10 +8,10 @@ import {
 } from "wagmi";
 // import { hardhat, localhost, sepolia } from "wagmi/chains";
 // import { BanknotesIcon } from "@heroicons/react/24/outline";
-import {
-  /* useAccountBalance, */
-  useTransactor,
-} from "~~/hooks/scaffold-eth";
+// import {
+//   useAccountBalance,
+//   useTransactor,
+// } from "~~/hooks/scaffold-eth";
 
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
 
@@ -27,7 +27,7 @@ export const DonateButton = () => {
   // const { balance } = useAccountBalance(address);
   // const { chain: ConnectedChain } = useNetwork();
   const [loading, setLoading] = useState(false);
-  const faucetTxn = useTransactor();
+//   const faucetTxn = useTransactor();
   const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e");
   eas.connect(provider);
 
@@ -39,11 +39,11 @@ export const DonateButton = () => {
   const sendETH = async () => {
     setIsClicked(true);
     try {
-      setLoading(true);
-      await faucetTxn({
-        to: "0x750EF1D7a0b4Ab1c97B7A623D7917CcEb5ea779C",
-        value: ethers.utils.parseEther("0.01"),
-      });
+    //   setLoading(true);
+    //   await faucetTxn({
+    //     to: "0x750EF1D7a0b4Ab1c97B7A623D7917CcEb5ea779C",
+    //     value: ethers.utils.parseEther("0.01"),
+    //   });
       setLoading(false);
       const encodedData = schemaEncoder.encodeData([
         { name: "donation_to", value: "0x750EF1D7a0b4Ab1c97B7A623D7917CcEb5ea779C", type: "address" },
@@ -96,7 +96,7 @@ export const DonateButton = () => {
     <button
       style={buttonStyle}
       onClick={() => {
-        loading ? sendETH : console.log("Loading, please wait...");
+        !loading ? sendETH : console.log("Loading, please wait...");
       }}
     >
       Donate
