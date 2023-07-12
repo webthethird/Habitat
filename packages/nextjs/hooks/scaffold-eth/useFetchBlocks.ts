@@ -95,7 +95,10 @@ export const useFetchBlocks = () => {
               }),
             );
 
-            setTransactionReceipts(prevReceipts => ({ ...prevReceipts, ...Object.assign({}, ...receipts) }));
+            setTransactionReceipts(prevReceipts => ({
+              ...prevReceipts,
+              ...Object.assign({}, ...receipts),
+            }));
           }
           setTotalBlocks(blockNumber + 1);
         }
