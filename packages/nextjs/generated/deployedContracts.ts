@@ -2949,10 +2949,10 @@ const contracts = {
             {
               inputs: [
                 {
-                    internalType: "string",
-                    name: "_baseSVG",
-                    type: "string",
-                  },
+                  internalType: "string",
+                  name: "_baseSVG",
+                  type: "string",
+                },
                 {
                   internalType: "address",
                   name: "_resolver",
