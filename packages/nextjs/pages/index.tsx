@@ -1,6 +1,6 @@
 // import Link from "next/link";
-import Image from "next/image";
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   EAS,
   /* SchemaEncoder */
@@ -20,7 +20,6 @@ import {
   /* useAccountBalance, useTransactor */
 } from "~~/hooks/scaffold-eth";
 import { contracts } from "~~/utils/scaffold-eth/contract";
-import next from "next/types";
 
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
 
@@ -270,7 +269,14 @@ const Home: NextPage = () => {
           className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}
         >
           {baseSVG ? (
-            <Image alt="Background image is your HabitatNFT rendered from on-chain SVG data" sizes="100vw" width={0} height={0} style={{ width: '100%', height: '100%' }} src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />
+            <Image
+              alt="Background image is your HabitatNFT rendered from on-chain SVG data"
+              sizes="100vw"
+              width={0}
+              height={0}
+              style={{ width: "100%", height: "100%" }}
+              src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`}
+            />
           ) : (
             <div></div>
           )}
