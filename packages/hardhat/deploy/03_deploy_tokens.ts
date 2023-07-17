@@ -9,7 +9,7 @@ import { DeployFunction } from "hardhat-deploy/types";
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployTokens: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   /*
     On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
 
@@ -87,8 +87,8 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   // const yourContract = await hre.ethers.getContract("YourContract", deployer);
 };
 
-export default deployYourContract;
+export default deployTokens;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["Tokens"];
+deployTokens.tags = ["Tokens"];
