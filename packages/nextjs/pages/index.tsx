@@ -4,7 +4,7 @@ import {
   EAS,
   /* SchemaEncoder */
 } from "@ethereum-attestation-service/eas-sdk";
-import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+// import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { BigNumber, utils } from "ethers";
 import type { NextPage } from "next";
 import { useAccount, useNetwork, useProvider } from "wagmi";
