@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Install forge
+        run: curl -L https://foundry.paradigm.xyz | bash && foundryup
+
       - name: Run hardhat node, deploy contracts (& generate contracts typescript output)
         run: yarn chain & yarn deploy 
 
