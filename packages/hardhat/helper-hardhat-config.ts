@@ -1,16 +1,16 @@
-import {ethers} from 'hardhat'
+import { ethers } from "hardhat";
 
 export interface networkConfigItem {
-    name?: string
-    easContractAddress?: string
-    schemaRegistryAddress?: string
-    donationResolverAddress?: string
-    erc6551RegistryAddress?: string
-    erc6551AccountImplAddress?: string
-  }
-  
+    name?: string;
+    easContractAddress?: string;
+    schemaRegistryAddress?: string;
+    donationResolverAddress?: string;
+    erc6551RegistryAddress?: string;
+    erc6551AccountImplAddress?: string;
+}
+
 export interface networkConfigInfo {
-    [key: number]: networkConfigItem
+    [key: number]: networkConfigItem;
 }
 
 export const networkConfig: networkConfigInfo = {
@@ -25,9 +25,9 @@ export const networkConfig: networkConfigInfo = {
         erc6551RegistryAddress: "0x02101dfB77FDE026414827Fdc604ddAF224F0921",
         erc6551AccountImplAddress: "0x2d25602551487c3f3354dd80d76d54383a243358",
     },
-}
+};
 
-export const developmentChains = ["hardhat", "localhost"]
-export const VERIFICATION_BLOCK_CONFIRMATIONS = 6
-export const frontEndContractsFile = "../nextjs-smartcontract-lottery-fcc/constants/contractAddresses.json"
-export const frontEndAbiFile = "../nextjs-smartcontract-lottery-fcc/constants/abi.json"
+export const developmentChains = ["hardhat", "localhost"];
+export const VERIFICATION_BLOCK_CONFIRMATIONS = 6;
+export const frontEndContractsFile = "../nextjs-smartcontract-lottery-fcc/constants/contractAddresses.json";
+export const frontEndAbiFile = "../nextjs-smartcontract-lottery-fcc/constants/abi.json";
