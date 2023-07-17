@@ -7,3 +7,6 @@
 [submodule "packages/hardhat/lib/account-abstraction"]
 	path = packages/hardhat/lib/account-abstraction
 	url = https://github.com/eth-infinitism/account-abstraction
+[submodule "packages/hardhat/lib/reference"]
+	path = packages/hardhat/lib/reference
+	url = https://github.com/erc6551/reference
