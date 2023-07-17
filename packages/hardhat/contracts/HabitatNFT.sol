@@ -39,7 +39,7 @@ contract HabitatNFT is Ownable, SingleOwnershipSoulbound, IERC4883 {
         // DonationEASResolver(payable(donationResolver)).setHabitatNFT(address(this));
     }
 
-    function setNFTree(address _nftree) public {
+    function setNFTree(address _nftree) public onlyOwner {
         nftree = NFTree(_nftree);
     }
 
@@ -48,7 +48,7 @@ contract HabitatNFT is Ownable, SingleOwnershipSoulbound, IERC4883 {
         greenPoints[recipient] += amount;
     }
 
-    function burnGreenPoints(address owner, uint256 amount) external onlyNFTree() {
+    function burnGreenPoints(address owner, uint256 amount) external onlyNFTree {
         require(greenPoints[owner] >= amount, "Not enough points to burn");
         greenPoints[owner] -= amount;
     }
