@@ -5,13 +5,18 @@ const contracts = {
       name: "localhost",
       contracts: {
         DonationEASResolver: {
-          address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+          address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
           abi: [
             {
               inputs: [
                 {
                   internalType: "contract IEAS",
                   name: "eas",
+                  type: "address",
+                },
+                {
+                  internalType: "contract ISchemaRegistry",
+                  name: "registry",
                   type: "address",
                 },
                 {
@@ -444,6 +449,32 @@ const contracts = {
                 },
               ],
               stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "schema",
+              outputs: [
+                {
+                  internalType: "string",
+                  name: "",
+                  type: "string",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "schemaUID",
+              outputs: [
+                {
+                  internalType: "bytes32",
+                  name: "",
+                  type: "bytes32",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
             {
@@ -1580,7 +1611,7 @@ const contracts = {
           ],
         },
         HabitatNFT: {
-          address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+          address: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
           abi: [
             {
               inputs: [
@@ -2268,7 +2299,7 @@ const contracts = {
           ],
         },
         NFTree: {
-          address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+          address: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
           abi: [
             {
               inputs: [],
@@ -2943,20 +2974,494 @@ const contracts = {
       chainId: "11155111",
       name: "sepolia",
       contracts: {
+        DonationEASResolver: {
+          address: "0x932C90f9C801535Fe1160921Ec4043AA7b64F75E",
+          abi: [
+            {
+              inputs: [
+                {
+                  internalType: "contract IEAS",
+                  name: "eas",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "_habitat",
+                  type: "address",
+                },
+              ],
+              stateMutability: "nonpayable",
+              type: "constructor",
+            },
+            {
+              inputs: [],
+              name: "AccessDenied",
+              type: "error",
+            },
+            {
+              inputs: [],
+              name: "InsufficientValue",
+              type: "error",
+            },
+            {
+              inputs: [],
+              name: "InvalidEAS",
+              type: "error",
+            },
+            {
+              inputs: [],
+              name: "NotPayable",
+              type: "error",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "to",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "from",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "value",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "bytes32",
+                  name: "tx_hash",
+                  type: "bytes32",
+                },
+              ],
+              name: "NewDonation",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: true,
+                  internalType: "address",
+                  name: "previousOwner",
+                  type: "address",
+                },
+                {
+                  indexed: true,
+                  internalType: "address",
+                  name: "newOwner",
+                  type: "address",
+                },
+              ],
+              name: "OwnershipTransferred",
+              type: "event",
+            },
+            {
+              inputs: [],
+              name: "VERSION",
+              outputs: [
+                {
+                  internalType: "string",
+                  name: "",
+                  type: "string",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "uid",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "schema",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "time",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "expirationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "revocationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "refUID",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "address",
+                      name: "recipient",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "attester",
+                      type: "address",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "revocable",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bytes",
+                      name: "data",
+                      type: "bytes",
+                    },
+                  ],
+                  internalType: "struct Attestation",
+                  name: "attestation",
+                  type: "tuple",
+                },
+              ],
+              name: "attest",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "habitatNFT",
+              outputs: [
+                {
+                  internalType: "contract HabitatNFT",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "isPayable",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "pure",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "uid",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "schema",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "time",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "expirationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "revocationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "refUID",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "address",
+                      name: "recipient",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "attester",
+                      type: "address",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "revocable",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bytes",
+                      name: "data",
+                      type: "bytes",
+                    },
+                  ],
+                  internalType: "struct Attestation[]",
+                  name: "attestations",
+                  type: "tuple[]",
+                },
+                {
+                  internalType: "uint256[]",
+                  name: "values",
+                  type: "uint256[]",
+                },
+              ],
+              name: "multiAttest",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "uid",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "schema",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "time",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "expirationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "revocationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "refUID",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "address",
+                      name: "recipient",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "attester",
+                      type: "address",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "revocable",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bytes",
+                      name: "data",
+                      type: "bytes",
+                    },
+                  ],
+                  internalType: "struct Attestation[]",
+                  name: "attestations",
+                  type: "tuple[]",
+                },
+                {
+                  internalType: "uint256[]",
+                  name: "values",
+                  type: "uint256[]",
+                },
+              ],
+              name: "multiRevoke",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "owner",
+              outputs: [
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "renounceOwnership",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "uid",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "schema",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "time",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "expirationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "revocationTime",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "refUID",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "address",
+                      name: "recipient",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "attester",
+                      type: "address",
+                    },
+                    {
+                      internalType: "bool",
+                      name: "revocable",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "bytes",
+                      name: "data",
+                      type: "bytes",
+                    },
+                  ],
+                  internalType: "struct Attestation",
+                  name: "attestation",
+                  type: "tuple",
+                },
+              ],
+              name: "revoke",
+              outputs: [
+                {
+                  internalType: "bool",
+                  name: "",
+                  type: "bool",
+                },
+              ],
+              stateMutability: "payable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "_habitat",
+                  type: "address",
+                },
+              ],
+              name: "setHabitatNFT",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "address",
+                  name: "newOwner",
+                  type: "address",
+                },
+              ],
+              name: "transferOwnership",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              stateMutability: "payable",
+              type: "receive",
+            },
+          ],
+        },
         HabitatNFT: {
           address: "0xc1d3ED79a410932A339582Cbd996772694C6DB66",
           abi: [
             {
               inputs: [
                 {
-                  internalType: "string",
-                  name: "_baseSVG",
-                  type: "string",
-                },
-                {
                   internalType: "address",
                   name: "_resolver",
                   type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "_baseSVG",
+                  type: "string",
                 },
               ],
               stateMutability: "nonpayable",
