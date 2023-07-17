@@ -34,7 +34,38 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
         // automatically mining the contract deployment transaction. There is no effect on live networks.
         autoMine: true,
     });
-
+    await deploy("EntryPoint", {
+        from: deployer,
+        // Contract constructor arguments
+        args: [],
+        log: true,
+        // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+        // automatically mining the contract deployment transaction. There is no effect on live networks.
+        autoMine: true,
+    });
+    const entryPoint = await ethers.getContract("EntryPoint");
+    await deploy("AccountGuardian", {
+        from: deployer,
+        // Contract constructor arguments
+        args: [],
+        log: true,
+        // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+        // automatically mining the contract deployment transaction. There is no effect on live networks.
+        autoMine: true,
+    });
+    const guardian = await ethers.getContract("AccountGuardian");
+    await deploy("Account", {
+        from: deployer,
+        // Contract constructor arguments
+        args: [
+            guardian.address,
+            entryPoint.address,
+        ],
+        log: true,
+        // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+        // automatically mining the contract deployment transaction. There is no effect on live networks.
+        autoMine: true,
+    });
   } else if (chainId) {
     if (networkConfig[chainId]["erc6551RegistryAddress"] && networkConfig[chainId]["erc6551AccountImplAddress"]) {
         return
