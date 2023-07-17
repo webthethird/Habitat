@@ -36,6 +36,9 @@ jobs:
       - name: Install ERC-6551 dependencies via forge
         run: |
           cd packages/hardhat
+          rm -rf lib/account-abstraction
+          rm -rf lib/openzeppelin-contracts
+          rm -rf lib/reference
           forge install OpenZeppelin/openzeppelin-contracts
           forge install erc6551/reference
           forge install eth-infinitism/account-abstraction
