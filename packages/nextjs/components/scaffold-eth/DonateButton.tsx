@@ -4,16 +4,14 @@ import { ethers } from "ethers";
 import invariant from "tiny-invariant";
 import {
   useAccount,
-  useNetwork, /* useSendTransaction, usePrepareSendTransaction, */
+  useNetwork,
+  /* useSendTransaction, usePrepareSendTransaction, */
   useProvider,
   useSigner,
 } from "wagmi";
 // import { hardhat, localhost, sepolia } from "wagmi/chains";
 // import { BanknotesIcon } from "@heroicons/react/24/outline";
-import {
-  useScaffoldContractRead,
-  useTransactor,
-} from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useTransactor } from "~~/hooks/scaffold-eth";
 import { contracts } from "~~/utils/scaffold-eth/contract";
 
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
@@ -34,11 +32,12 @@ export const DonateButton = () => {
   const [loading, setLoading] = useState(false);
   const faucetTxn = useTransactor();
 
-  const easAddress = network.chain && contracts ? (
-    contracts[network.chain.id][0]["contracts"]["EAS"] ? (
-        contracts[network.chain.id][0]["contracts"]["EAS"].address
-        ) : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
-    ) : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
+  const easAddress =
+    network.chain && contracts
+      ? contracts[network.chain.id][0]["contracts"]["EAS"]
+        ? contracts[network.chain.id][0]["contracts"]["EAS"].address
+        : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
+      : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
   if (network.chain) {
     console.log("EAS contract address on %s: %s", network.chain.name, easAddress);
   } else {

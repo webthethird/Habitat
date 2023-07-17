@@ -7,11 +7,7 @@ import {
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { BigNumber, utils } from "ethers";
 import type { NextPage } from "next";
-import {
-  useAccount,
-  useProvider,
-  useNetwork
-} from "wagmi";
+import { useAccount, useNetwork, useProvider } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { DonateButton } from "~~/components/scaffold-eth";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
@@ -28,7 +24,6 @@ import { contracts } from "~~/utils/scaffold-eth/contract";
 
 // const NUM_OF_ETH = "1";
 
-
 const Home: NextPage = () => {
   const { address } = useAccount();
   const network = useNetwork();
@@ -36,17 +31,18 @@ const Home: NextPage = () => {
   // const [visible, setVisible] = useState(true);
   // const [newSVG, setNewSVG] = useState("");
 
-  const easAddress = network.chain && contracts ? (
-    contracts[network.chain.id][0]["contracts"]["EAS"] ? (
-        contracts[network.chain.id][0]["contracts"]["EAS"].address
-        ) : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
-    ) : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
+  const easAddress =
+    network.chain && contracts
+      ? contracts[network.chain.id][0]["contracts"]["EAS"]
+        ? contracts[network.chain.id][0]["contracts"]["EAS"].address
+        : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
+      : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
   if (network.chain) {
     console.log("EAS contract address on %s: %s", network.chain.name, easAddress);
   } else {
     console.log("network.chain is undefined");
   }
-  
+
   const eas = new EAS(easAddress);
   eas.connect(provider);
 
