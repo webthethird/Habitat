@@ -30,8 +30,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Install forge
+      - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install ERC-6551 dependencies via forge
+        run: |
+          cd packages/hardhat
+          forge install OpenZeppelin/openzeppelin-contracts
+          forge install erc6551/reference
+          forge install eth-infinitism/account-abstraction
+          cd ../..
 
       - name: Run hardhat node, deploy contracts (& generate contracts typescript output)
         run: yarn chain & yarn deploy 
