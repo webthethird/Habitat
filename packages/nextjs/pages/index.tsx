@@ -101,11 +101,11 @@ const Home: NextPage = () => {
   });
 
   const WorldButton = () => {
-    const [isClicked, setIsClicked] = useState(false);
+    const [isClicked, /* setIsClicked */] = useState(false);
 
-    const handleClick = () => {
-      setIsClicked(true);
-    };
+    // const handleClick = () => {
+    //   setIsClicked(true);
+    // };
 
     // const urlParams = new URLSearchParams(window.location.search);
     // const action = urlParams.get("action") ?? "";
@@ -133,10 +133,7 @@ const Home: NextPage = () => {
         {({ open }) => (
           <button
             style={buttonStyle}
-            onClick={() => {
-              open;
-              handleClick();
-            }}
+            onClick={open}
           >
             Verify WorldId
           </button>
