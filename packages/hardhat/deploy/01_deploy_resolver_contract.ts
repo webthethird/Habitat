@@ -32,6 +32,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
         // Contract constructor arguments
         args: [
             eas.address,
+            schemaRegistry.address,
             "0x59c371F978e3D554071cCf290eD9B15c15Df2D8B"
         ],
         log: true,
@@ -39,12 +40,6 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
         // automatically mining the contract deployment transaction. There is no effect on live networks.
         autoMine: true,
     });
-    const resolver = await ethers.getContract("DonationEASResolver");
-    const schema = "address donation_to,address donation_from,bytes32 donation_tx,uint256 donation_value";
-    const registerTx = await schemaRegistry.register(schema, resolver.address, false);
-    const txReceipt = await registerTx.wait();
-    const uid = txReceipt.events[0].topics[0];
-    console.log("Registered donation schema with ID", uid);
   } else if (chainId) {
     // if (networkConfig[chainId]["donationResolverAddress"] || !networkConfig[chainId]["easContractAddress"]) {
     //     return
@@ -54,6 +49,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
         // Contract constructor arguments
         args: [
             networkConfig[chainId]["easContractAddress"],
+            networkConfig[chainId]["schemaRegistryAddress"],
             "0x59c371F978e3D554071cCf290eD9B15c15Df2D8B"
         ],
         log: true,

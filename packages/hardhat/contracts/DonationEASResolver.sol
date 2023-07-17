@@ -4,17 +4,21 @@ pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@ethereum-attestation-service/eas-contracts/contracts/resolver/SchemaResolver.sol";
+import "@ethereum-attestation-service/eas-contracts/contracts/SchemaRegistry.sol";
 import {IEAS, Attestation} from "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import "./HabitatNFT.sol";
 
 contract DonationEASResolver is Ownable, SchemaResolver {
-    // UID of EAS schema: 0x3bb54e554f4bba20b4c98584863a60985e4e021536311c3cf1798b6158015979
+    string public constant schema = "address donation_to,address donation_from,bytes32 donation_tx,uint256 donation_val";
+    bytes32 public immutable schemaUID;
+
     HabitatNFT public habitatNFT;
 
     event NewDonation(address to, address from, uint256 value, bytes32 tx_hash);
 
-    constructor(IEAS eas, address _habitat) SchemaResolver(eas) Ownable() {
+    constructor(IEAS eas, ISchemaRegistry registry, address _habitat) SchemaResolver(eas) Ownable() {
         habitatNFT = HabitatNFT(_habitat);
+        schemaUID = registry.register(schema, this, false);
     }
 
     function setHabitatNFT(address _habitat) public onlyOwner {
