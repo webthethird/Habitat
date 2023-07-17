@@ -1,56 +1,65 @@
 // import Link from "next/link";
-import type { NextPage } from "next";
-import { MetaHeader } from "~~/components/MetaHeader";
-import React, { FC, useState } from 'react';
+import React, { useState } from "react";
+import {
+  EAS,
+  /* SchemaEncoder */
+} from "@ethereum-attestation-service/eas-sdk";
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import { BigNumber, utils } from "ethers";
+import type { NextPage } from "next";
+import {
+  useAccount,
+  useProvider,
+  /* useNetwork */
+} from "wagmi";
+import { MetaHeader } from "~~/components/MetaHeader";
 import { DonateButton } from "~~/components/scaffold-eth";
-import { useAccount, useProvider, /* useNetwork */ } from "wagmi";
+import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 // import { hardhat, localhost } from "wagmi/chains";
 // import { BanknotesIcon } from "@heroicons/react/24/outline";
-import { useScaffoldContractRead, useScaffoldContractWrite, /* useAccountBalance, useTransactor */ } from "~~/hooks/scaffold-eth";
-import { BigNumber, utils } from "ethers";
-import { EAS, /* SchemaEncoder */ } from "@ethereum-attestation-service/eas-sdk";
+import {
+  useScaffoldContractRead,
+  useScaffoldContractWrite,
+  /* useAccountBalance, useTransactor */
+} from "~~/hooks/scaffold-eth";
+
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
 
 // const NUM_OF_ETH = "1";
 
-
 const Home: NextPage = () => {
-    const { address } = useAccount();
-    const provider = useProvider();
-    // const [visible, setVisible] = useState(true);
-    // const [newSVG, setNewSVG] = useState("");
+  const { address } = useAccount();
+  const provider = useProvider();
+  // const [visible, setVisible] = useState(true);
+  // const [newSVG, setNewSVG] = useState("");
 
-    const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e")
-    eas.connect(provider)
+  const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e");
+  eas.connect(provider);
 
-    // Initialize SchemaEncoder with the schema string
-    // const schemaEncoder = new SchemaEncoder("address donation_from, address donation_to, bytes32 donation_tx, uint256 donation_value");
-    // const encodedData = schemaEncoder.encodeData([
-    //     { name: "eventId", value: 1, type: "uint256" },
-    //     { name: "voteIndex", value: 1, type: "uint8" },
-    // ]);
+  // Initialize SchemaEncoder with the schema string
+  // const schemaEncoder = new SchemaEncoder("address donation_from, address donation_to, bytes32 donation_tx, uint256 donation_value");
+  // const encodedData = schemaEncoder.encodeData([
+  //     { name: "eventId", value: 1, type: "uint256" },
+  //     { name: "voteIndex", value: 1, type: "uint8" },
+  // ]);
 
-    const { data: baseId } = useScaffoldContractRead({
-        contractName: "HabitatNFT",
-        functionName: "tokenOfOwnerByIndex",
-        args: [
-            address,
-            BigNumber.from(0)
-        ]
-    })
+  const { data: baseId } = useScaffoldContractRead({
+    contractName: "HabitatNFT",
+    functionName: "tokenOfOwnerByIndex",
+    args: [address, BigNumber.from(0)],
+  });
 
-    const { data: baseSVG } = useScaffoldContractRead({
-        contractName: "HabitatNFT",
-        functionName: "renderTokenByOwner",
-        args: [address]
-    })
+  const { data: baseSVG } = useScaffoldContractRead({
+    contractName: "HabitatNFT",
+    functionName: "renderTokenByOwner",
+    args: [address],
+  });
 
-    const { writeAsync: mintTreeAsync, /* isLoading */ } = useScaffoldContractWrite({
-        contractName: "NFTree",
-        functionName: "mint",
-        args: [
-            `<path d="M644.711 506.225V376.003C644.711 369.104 639.7 363.511 633.518 363.511H627.137C620.955 363.511 615.944 369.104 615.944 376.003V506.225H644.711Z" fill="#7C4D29"/>
+  const { writeAsync: mintTreeAsync /* isLoading */ } = useScaffoldContractWrite({
+    contractName: "NFTree",
+    functionName: "mint",
+    args: [
+      `<path d="M644.711 506.225V376.003C644.711 369.104 639.7 363.511 633.518 363.511H627.137C620.955 363.511 615.944 369.104 615.944 376.003V506.225H644.711Z" fill="#7C4D29"/>
             <path opacity="0.6" d="M644.711 482.168V373.897C644.711 368.161 639.7 363.511 633.518 363.511H627.137C620.955 363.511 615.944 368.161 615.944 373.897V482.167H644.711V482.168Z" fill="#56331B"/>
             <path d="M699.655 449.213C699.655 459.701 691.266 468.206 680.918 468.206H579.737C569.389 468.206 561 459.701 561 449.213V407.432C561 396.943 569.389 388.441 579.737 388.441H680.918C691.266 388.441 699.655 396.943 699.655 407.432V449.213Z" fill="#65AD18"/>
             <path d="M680.918 388.441H579.737C569.389 388.441 561 396.943 561 407.432V427.689C561 438.178 569.389 446.682 579.737 446.682H680.918C691.266 446.682 699.655 438.178 699.655 427.689V407.432C699.655 396.943 691.266 388.441 680.918 388.441Z" fill="#7FC62E"/>
@@ -68,178 +77,195 @@ const Home: NextPage = () => {
             <path d="M605.344 273C595.206 273 586.953 281.164 586.623 291.359C586.952 301.553 595.205 309.717 605.344 309.717H655.31C665.448 309.717 673.701 301.553 674.031 291.359C673.701 281.164 665.448 273 655.31 273H605.344Z" fill="#7FC62E"/>
             <path d="M635.792 294.207C635.792 296.304 634.114 298.005 632.045 298.005H618.617C616.548 298.005 614.87 296.304 614.87 294.207C614.87 292.109 616.548 290.409 618.617 290.409H632.045C634.114 290.409 635.792 292.109 635.792 294.207Z" fill="#A5E84D"/>
             <path d="M619.241 282.496C619.241 284.593 618.014 286.294 616.5 286.294H606.68C605.166 286.294 603.939 284.593 603.939 282.496C603.939 280.399 605.166 278.697 606.68 278.697H616.5C618.014 278.697 619.241 280.398 619.241 282.496Z" fill="#A5E84D"/>`,
-            baseId
-        ],
-        // value: "0.01",
-        onBlockConfirmation: txnReceipt => {
-            console.log("📦 Transaction blockHash", txnReceipt.blockHash);
-        },
-    });
+      baseId,
+    ],
+    // value: "0.01",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
 
-    const { writeAsync: mintHabitatAsync } = useScaffoldContractWrite({
-        contractName: "HabitatNFT",
-        functionName: "mint",
-        // value: "0.01",
-        onBlockConfirmation: txnReceipt => {
-            console.log("📦 Transaction blockHash", txnReceipt.blockHash);
-            // setNewSVG()
-        },
-    });
+  const { writeAsync: mintHabitatAsync } = useScaffoldContractWrite({
+    contractName: "HabitatNFT",
+    functionName: "mint",
+    // value: "0.01",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      // setNewSVG()
+    },
+  });
 
-    const { data: greenPoints } = useScaffoldContractRead({
-        contractName: "HabitatNFT",
-        functionName: "greenPoints",
-        args: [address]
-    })
+  const { data: greenPoints } = useScaffoldContractRead({
+    contractName: "HabitatNFT",
+    functionName: "greenPoints",
+    args: [address],
+  });
 
-    const WorldButton = () => {
-        const [isClicked, setIsClicked] = useState(false);
+  const WorldButton = () => {
+    const [isClicked /* setIsClicked */] = useState(false);
 
-        const handleClick = () => {
-            setIsClicked(true);
-        };
+    // const handleClick = () => {
+    //   setIsClicked(true);
+    // };
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const action = urlParams.get("action") ?? "";
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const action = urlParams.get("action") ?? "";
 
-        const buttonStyle = {
-            width: '300px',
-            height: '70px',
-            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-            borderRadius: '45px',
-            // margin: '27px',
-            // marginTop: '-370px',
-            fontSize: '25px',
-            backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
-        };
-
-        return (
-          <IDKitWidget
-            action={action}
-            onSuccess={onSuccess}
-            handleVerify={handleProof}
-            app_id={app_id_key}
-            credential_types={[CredentialType.Orb, CredentialType.Phone]}
-          >
-            {({ open }: { open: FC }) => <button style={buttonStyle} onClick={() => { open({}); handleClick(); }}>Verify with World ID</button>}
-          </IDKitWidget>
-        );
+    const buttonStyle = {
+      width: "300px",
+      height: "70px",
+      boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
+      borderRadius: "45px",
+      // margin: '27px',
+      // marginTop: '-370px',
+      fontSize: "25px",
+      backgroundColor: isClicked ? "#A5E84D" : "#FFFFFF",
     };
-
-
-    const MintButton = () => {
-        const [isClicked, setIsClicked] = useState(false);
-
-        const handleClick = () => {
-            setIsClicked(true);
-        };
-
-        const buttonStyle = {
-            width: '300px',
-            height: '70px',
-            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-            borderRadius: '45px',
-            // marginTop: '-370px',
-            fontSize: '25px',
-            // margin: '27px',
-            // marginBottom: '20px',
-            backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
-        };
-
-        return (
-            <button style={buttonStyle} onClick={() => {mintHabitatAsync(); handleClick();}}>
-                Mint Soulbound Token
-            </button>
-        );
-    };
-
-    const MintTree = () => {
-        const [isClicked, setIsClicked] = useState(false);
-
-        const handleClick = () => {
-            setIsClicked(true);
-        };
-
-        const buttonStyle = {
-            width: '300px',
-            height: '70px',
-            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-            borderRadius: '45px',
-            // marginTop: '-370px',
-            fontSize: '25px',
-            // margin: '27px',
-            // marginBottom: '20px',
-            backgroundColor: isClicked ? '#A5E84D' : '#FFFFFF',
-        };
-
-        return (
-            <button style={buttonStyle} onClick={() => {mintTreeAsync(); handleClick();}}>
-                Mint NFTree
-            </button>
-        );
-    };
-
-
-    const Points = () => {
-
-        const buttonStyle = {
-            width: '300px',
-            height: '70px',
-            boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.1)',
-            borderRadius: '45px',
-            // marginTop: '-370px',
-            fontSize: '25px',
-            // marginBottom: '20px',
-            backgroundColor: '#FFFFFF',
-        };
-
-        return (
-            <div className="text-center">
-                <div style={buttonStyle} className="underline">
-                    Points: {greenPoints ? (utils.formatEther(greenPoints.mul(100)))?.toString() : "0"}
-                </div>
-            </div>
-        );
-    };
-
-
-    const handleProof = (result: ISuccessResult) => {
-        return new Promise<void>((resolve) => {
-            setTimeout(() => resolve(), 3000);
-            // NOTE: Example of how to decline the verification request and show an error message to the user
-            console.log(result);
-        });
-    };
-
-    const onSuccess = (result: ISuccessResult) => {
-        console.log(result);
-    };
-
-    const app_id_key = "app_746b524e1d3b0eaf005e9c78835ec0d8";
 
     return (
-        <>
-            <MetaHeader />
-            <div className="flex items-center flex-row flex-grow pt-10" style={{ backgroundColor: '#e1edf0' }} data-theme="exampleUi">
-                <div className="flex flex-col flex-grow">
-                    <div className="flex justify-around">
-                        <WorldButton />
-                        <MintButton />
-                        <DonateButton />
-                        <MintTree />
-                        <Points />
-                    </div>
-                </div>
-            </div>
-            <div className="col-span-2 lg:col-span-3 flex flex-col gap-6">
-                <div className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}>
-                    {baseSVG ? (<img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />) : (<div></div>)}
-                    
-                </div>
-            </div>
-        </>
+      <IDKitWidget
+        action="my_action"
+        signal="my_signal"
+        onSuccess={onSuccess}
+        handleVerify={handleProof}
+        app_id={app_id_key}
+        credential_types={[CredentialType.Orb, CredentialType.Phone]}
+      >
+        {({ open }) => (
+          <button style={buttonStyle} onClick={open}>
+            Verify WorldId
+          </button>
+        )}
+      </IDKitWidget>
     );
+  };
+
+  const MintButton = () => {
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleClick = () => {
+      setIsClicked(true);
+      mintHabitatAsync();
+    };
+
+    const buttonStyle = {
+      width: "300px",
+      height: "70px",
+      boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
+      borderRadius: "45px",
+      // marginTop: '-370px',
+      fontSize: "25px",
+      // margin: '27px',
+      // marginBottom: '20px',
+      backgroundColor: isClicked ? "#A5E84D" : "#FFFFFF",
+    };
+
+    return (
+      <button style={buttonStyle} onClick={handleClick}>
+        Mint Soulbound Token
+      </button>
+    );
+  };
+
+  const MintTree = () => {
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleClick = () => {
+      setIsClicked(true);
+      mintTreeAsync();
+    };
+
+    const buttonStyle = {
+      width: "300px",
+      height: "70px",
+      boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
+      borderRadius: "45px",
+      // marginTop: '-370px',
+      fontSize: "25px",
+      // margin: '27px',
+      // marginBottom: '20px',
+      backgroundColor: isClicked ? "#A5E84D" : "#FFFFFF",
+    };
+
+    return (
+      <button style={buttonStyle} onClick={handleClick}>
+        Mint NFTree
+      </button>
+    );
+  };
+
+  const Points = () => {
+    const buttonStyle = {
+      width: "300px",
+      height: "70px",
+      boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
+      borderRadius: "45px",
+      // marginTop: '-370px',
+      fontSize: "25px",
+      // marginBottom: '20px',
+      backgroundColor: "#FFFFFF",
+    };
+
+    return (
+      <div className="text-center">
+        <div style={buttonStyle} className="underline">
+          Points: {greenPoints ? utils.formatEther(greenPoints.mul(100))?.toString() : "0"}
+        </div>
+      </div>
+    );
+  };
+
+  const handleProof = (result: ISuccessResult) => {
+    return new Promise<void>(resolve => {
+      setTimeout(() => resolve(), 3000);
+      // NOTE: Example of how to decline the verification request and show an error message to the user
+      console.log(result);
+    });
+  };
+
+  const onSuccess = (result: ISuccessResult) => {
+    console.log(result);
+  };
+
+  const app_id_key = "app_746b524e1d3b0eaf005e9c78835ec0d8";
+
+  return (
+    <>
+      <MetaHeader />
+      <div
+        className="flex items-center flex-row flex-grow pt-10"
+        style={{ backgroundColor: "#e1edf0" }}
+        data-theme="exampleUi"
+      >
+        <div className="flex flex-col flex-grow">
+          <div className="flex justify-around">
+            {!address ? (
+              <RainbowKitCustomConnectButton />
+            ) : (
+              <>
+                <WorldButton />
+                <MintButton />
+                <DonateButton />
+                <MintTree />
+                <Points />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="col-span-2 lg:col-span-3 flex flex-col gap-6">
+        <div
+          className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}
+        >
+          {baseSVG ? (
+            <img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />
+          ) : (
+            <div></div>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Home;
-

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "./interfaces/IERC4883.sol";
@@ -25,7 +25,7 @@ contract NFTree is Ownable, ERC721Enumerable, ERC721URIStorage, IERC4883 {
         habitat = HabitatNFT(_habitat);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721Enumerable, IERC165) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Enumerable, ERC721URIStorage, IERC165) returns (bool) {
         return interfaceId == type(IERC721Enumerable).interfaceId || interfaceId == type(IERC165).interfaceId || interfaceId == type(IERC4883).interfaceId || super.supportsInterface(interfaceId);
     }
 

@@ -37,7 +37,7 @@
     "usehooks-ts@^2.7.2": "patch:usehooks-ts@npm:^2.7.2#./.yarn/patches/usehooks-ts-npm-2.7.2-fceffe0e43.patch"
   },
   "dependencies": {
-    "@ethereum-attestation-service/eas-sdk": "^0.29.0",
+    "@ethereum-attestation-service/eas-sdk": "^0.29.1",
     "@tokenbound/sdk": "^0.3.0",
     "@web3uikit/core": "^1.1.5",
     "@worldcoin/idkit": "^0.5.1",
