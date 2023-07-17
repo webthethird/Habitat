@@ -9,7 +9,7 @@ import { DeployFunction } from "hardhat-deploy/types";
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployEASResolver: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployERC6551: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   /*
     On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
 
@@ -25,42 +25,69 @@ const deployEASResolver: DeployFunction = async function (hre: HardhatRuntimeEnv
   const chainId = network.config.chainId;
 
   if (developmentChains.includes(network.name)) {
-    const schemaRegistry = await ethers.getContract("SchemaRegistry");
-    const eas = await ethers.getContract("EAS");
-    await deploy("DonationEASResolver", {
+    await deploy("ERC6551Registry", {
       from: deployer,
       // Contract constructor arguments
-      args: [eas.address, schemaRegistry.address, "0x59c371F978e3D554071cCf290eD9B15c15Df2D8B"],
+      args: [],
+      log: true,
+      // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+      // automatically mining the contract deployment transaction. There is no effect on live networks.
+      autoMine: true,
+    });
+    await deploy("EntryPoint", {
+      from: deployer,
+      // Contract constructor arguments
+      args: [],
+      log: true,
+      // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+      // automatically mining the contract deployment transaction. There is no effect on live networks.
+      autoMine: true,
+    });
+    const entryPoint = await ethers.getContract("EntryPoint");
+    await deploy("AccountGuardian", {
+      from: deployer,
+      // Contract constructor arguments
+      args: [],
+      log: true,
+      // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+      // automatically mining the contract deployment transaction. There is no effect on live networks.
+      autoMine: true,
+    });
+    const guardian = await ethers.getContract("AccountGuardian");
+    await deploy("Account", {
+      from: deployer,
+      // Contract constructor arguments
+      args: [guardian.address, entryPoint.address],
       log: true,
       // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
       // automatically mining the contract deployment transaction. There is no effect on live networks.
       autoMine: true,
     });
   } else if (chainId) {
-    // if (networkConfig[chainId]["donationResolverAddress"] || !networkConfig[chainId]["easContractAddress"]) {
-    //     return
-    // }
-    await deploy("DonationEASResolver", {
-      from: deployer,
-      // Contract constructor arguments
-      args: [
-        networkConfig[chainId]["easContractAddress"],
-        networkConfig[chainId]["schemaRegistryAddress"],
-        "0x59c371F978e3D554071cCf290eD9B15c15Df2D8B",
-      ],
-      log: true,
-      // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
-      // automatically mining the contract deployment transaction. There is no effect on live networks.
-      autoMine: true,
-    });
+    if (networkConfig[chainId]["erc6551RegistryAddress"] && networkConfig[chainId]["erc6551AccountImplAddress"]) {
+      return;
+    }
+    // await deploy("DonationEASResolver", {
+    //     from: deployer,
+    //     // Contract constructor arguments
+    //     args: [
+    //         networkConfig[chainId]["easContractAddress"],
+    //         networkConfig[chainId]["schemaRegistryAddress"],
+    //         "0x59c371F978e3D554071cCf290eD9B15c15Df2D8B"
+    //     ],
+    //     log: true,
+    //     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    //     // automatically mining the contract deployment transaction. There is no effect on live networks.
+    //     autoMine: true,
+    // });
   }
 
   // Get the deployed contract
   // const yourContract = await hre.ethers.getContract("YourContract", deployer);
 };
 
-export default deployEASResolver;
+export default deployERC6551;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployEASResolver.tags = ["DonationResolver"];
+deployERC6551.tags = ["ERC6551"];

@@ -1,5 +1,6 @@
 // import Link from "next/link";
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   EAS,
   /* SchemaEncoder */
@@ -7,11 +8,7 @@ import {
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { BigNumber, utils } from "ethers";
 import type { NextPage } from "next";
-import {
-  useAccount,
-  useProvider,
-  /* useNetwork */
-} from "wagmi";
+import { useAccount, useNetwork, useProvider } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { DonateButton } from "~~/components/scaffold-eth";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
@@ -22,6 +19,7 @@ import {
   useScaffoldContractWrite,
   /* useAccountBalance, useTransactor */
 } from "~~/hooks/scaffold-eth";
+import { contracts } from "~~/utils/scaffold-eth/contract";
 
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
 
@@ -29,11 +27,24 @@ import {
 
 const Home: NextPage = () => {
   const { address } = useAccount();
+  const network = useNetwork();
   const provider = useProvider();
   // const [visible, setVisible] = useState(true);
   // const [newSVG, setNewSVG] = useState("");
 
-  const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e");
+  const easAddress =
+    network.chain && contracts
+      ? contracts[network.chain.id][0]["contracts"]["EAS"]
+        ? contracts[network.chain.id][0]["contracts"]["EAS"].address
+        : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
+      : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
+  if (network.chain) {
+    console.log("EAS contract address on %s: %s", network.chain.name, easAddress);
+  } else {
+    console.log("network.chain is undefined");
+  }
+
+  const eas = new EAS(easAddress);
   eas.connect(provider);
 
   // Initialize SchemaEncoder with the schema string
@@ -258,7 +269,14 @@ const Home: NextPage = () => {
           className={`flex flex-col justify-center items-center bg-[length:100%_100%] py-0 px-5 sm:px-0 lg:py-auto max-w-[100vw] `}
         >
           {baseSVG ? (
-            <img width="100%" height="100%" src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`} />
+            <Image
+              alt="Background image is your HabitatNFT rendered from on-chain SVG data"
+              sizes="100vw"
+              width={0}
+              height={0}
+              style={{ width: "100%", height: "100%" }}
+              src={`data:image/svg+xml;utf8,${encodeURIComponent(baseSVG)}`}
+            />
           ) : (
             <div></div>
           )}

@@ -4,16 +4,15 @@ import { ethers } from "ethers";
 import invariant from "tiny-invariant";
 import {
   useAccount,
-  /* useNetwork, useSendTransaction, usePrepareSendTransaction, */
+  useNetwork,
+  /* useSendTransaction, usePrepareSendTransaction, */
   useProvider,
   useSigner,
 } from "wagmi";
 // import { hardhat, localhost, sepolia } from "wagmi/chains";
 // import { BanknotesIcon } from "@heroicons/react/24/outline";
-import {
-  //   useAccountBalance,
-  useTransactor,
-} from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useTransactor } from "~~/hooks/scaffold-eth";
+import { contracts } from "~~/utils/scaffold-eth/contract";
 
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
 
@@ -25,13 +24,26 @@ import {
 export const DonateButton = () => {
   const [isClicked, setIsClicked] = useState(false);
   const { address, status } = useAccount();
+  const network = useNetwork();
   const { data: signer } = useSigner();
   const provider = useProvider();
   // const { balance } = useAccountBalance(address);
   // const { chain: ConnectedChain } = useNetwork();
   const [loading, setLoading] = useState(false);
   const faucetTxn = useTransactor();
-  const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e");
+
+  const easAddress =
+    network.chain && contracts
+      ? contracts[network.chain.id][0]["contracts"]["EAS"]
+        ? contracts[network.chain.id][0]["contracts"]["EAS"].address
+        : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
+      : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
+  if (network.chain) {
+    console.log("EAS contract address on %s: %s", network.chain.name, easAddress);
+  } else {
+    console.log("network.chain is undefined");
+  }
+  const eas = new EAS(easAddress);
   eas.connect(provider);
 
   // Initialize SchemaEncoder with the schema string
@@ -39,12 +51,18 @@ export const DonateButton = () => {
     "address donation_to,address donation_from,bytes32 donation_tx,uint256 donation_val",
   );
 
+  const { data: schemaUID } = useScaffoldContractRead({
+    contractName: "DonationEASResolver",
+    functionName: "schemaUID",
+  });
+
   const sendETH = async () => {
     if (status !== "connected" || !address) {
       return;
     } else {
       invariant(signer, "signer must be defined");
       eas.connect(signer);
+      invariant(schemaUID, "schema UID must be defined");
 
       setIsClicked(true);
       try {
@@ -69,8 +87,6 @@ export const DonateButton = () => {
           },
           { name: "donation_val", value: ethers.utils.parseEther("0.1"), type: "uint256" },
         ]);
-
-        const schemaUID = "0xadfffada54293ee92b824d9c271e9fca450cbf55634d69cbcda01c4efef45c90";
 
         const tx = await eas.attest({
           schema: schemaUID,

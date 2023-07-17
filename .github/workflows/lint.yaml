@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
+        with:
+          submodules: recursive
 
       - name: Setup node env
         uses: actions/setup-node@v3
@@ -29,6 +31,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
 
       - name: Run hardhat node, deploy contracts (& generate contracts typescript output)
         run: yarn chain & yarn deploy 
