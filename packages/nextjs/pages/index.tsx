@@ -10,7 +10,7 @@ import type { NextPage } from "next";
 import {
   useAccount,
   useProvider,
-  /* useNetwork */
+  useNetwork
 } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { DonateButton } from "~~/components/scaffold-eth";
@@ -22,18 +22,32 @@ import {
   useScaffoldContractWrite,
   /* useAccountBalance, useTransactor */
 } from "~~/hooks/scaffold-eth";
+import { contracts } from "~~/utils/scaffold-eth/contract";
 
 // import { getLocalProvider } from "~~/utils/scaffold-eth";
 
 // const NUM_OF_ETH = "1";
 
+
 const Home: NextPage = () => {
   const { address } = useAccount();
+  const network = useNetwork();
   const provider = useProvider();
   // const [visible, setVisible] = useState(true);
   // const [newSVG, setNewSVG] = useState("");
 
-  const eas = new EAS("0xC2679fBD37d54388Ce493F1DB75320D236e1815e");
+  const easAddress = network.chain && contracts ? (
+    contracts[network.chain.id][0]["contracts"]["EAS"] ? (
+        contracts[network.chain.id][0]["contracts"]["EAS"].address
+        ) : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
+    ) : "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
+  if (network.chain) {
+    console.log("EAS contract address on %s: %s", network.chain.name, easAddress);
+  } else {
+    console.log("network.chain is undefined");
+  }
+  
+  const eas = new EAS(easAddress);
   eas.connect(provider);
 
   // Initialize SchemaEncoder with the schema string
