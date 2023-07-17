@@ -14,6 +14,7 @@ import {
 } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { DonateButton } from "~~/components/scaffold-eth";
+import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 // import { hardhat, localhost } from "wagmi/chains";
 // import { BanknotesIcon } from "@heroicons/react/24/outline";
 import {
@@ -101,7 +102,7 @@ const Home: NextPage = () => {
   });
 
   const WorldButton = () => {
-    const [isClicked, /* setIsClicked */] = useState(false);
+    const [isClicked /* setIsClicked */] = useState(false);
 
     // const handleClick = () => {
     //   setIsClicked(true);
@@ -131,10 +132,7 @@ const Home: NextPage = () => {
         credential_types={[CredentialType.Orb, CredentialType.Phone]}
       >
         {({ open }) => (
-          <button
-            style={buttonStyle}
-            onClick={open}
-          >
+          <button style={buttonStyle} onClick={open}>
             Verify WorldId
           </button>
         )}
@@ -147,6 +145,7 @@ const Home: NextPage = () => {
 
     const handleClick = () => {
       setIsClicked(true);
+      mintHabitatAsync();
     };
 
     const buttonStyle = {
@@ -162,13 +161,7 @@ const Home: NextPage = () => {
     };
 
     return (
-      <button
-        style={buttonStyle}
-        onClick={() => {
-          mintHabitatAsync();
-          handleClick();
-        }}
-      >
+      <button style={buttonStyle} onClick={handleClick}>
         Mint Soulbound Token
       </button>
     );
@@ -179,6 +172,7 @@ const Home: NextPage = () => {
 
     const handleClick = () => {
       setIsClicked(true);
+      mintTreeAsync();
     };
 
     const buttonStyle = {
@@ -194,13 +188,7 @@ const Home: NextPage = () => {
     };
 
     return (
-      <button
-        style={buttonStyle}
-        onClick={() => {
-          mintTreeAsync();
-          handleClick();
-        }}
-      >
+      <button style={buttonStyle} onClick={handleClick}>
         Mint NFTree
       </button>
     );
@@ -251,11 +239,17 @@ const Home: NextPage = () => {
       >
         <div className="flex flex-col flex-grow">
           <div className="flex justify-around">
-            <WorldButton />
-            <MintButton />
-            <DonateButton />
-            <MintTree />
-            <Points />
+            {!address ? (
+              <RainbowKitCustomConnectButton />
+            ) : (
+              <>
+                <WorldButton />
+                <MintButton />
+                <DonateButton />
+                <MintTree />
+                <Points />
+              </>
+            )}
           </div>
         </div>
       </div>
