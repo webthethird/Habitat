@@ -4,7 +4,7 @@ import {
   EAS,
   /* SchemaEncoder */
 } from "@ethereum-attestation-service/eas-sdk";
-// import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { BigNumber, utils } from "ethers";
 import type { NextPage } from "next";
 import { useAccount, useNetwork, useProvider } from "wagmi";
@@ -111,44 +111,44 @@ const Home: NextPage = () => {
     args: [address],
   });
 
-//   const WorldButton = () => {
-//     const [isClicked /* setIsClicked */] = useState(false);
+  const WorldButton = () => {
+    const [isClicked /* setIsClicked */] = useState(false);
 
-//     // const handleClick = () => {
-//     //   setIsClicked(true);
-//     // };
+    // const handleClick = () => {
+    //   setIsClicked(true);
+    // };
 
-//     // const urlParams = new URLSearchParams(window.location.search);
-//     // const action = urlParams.get("action") ?? "";
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const action = urlParams.get("action") ?? "";
 
-//     const buttonStyle = {
-//       width: "300px",
-//       height: "70px",
-//       boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
-//       borderRadius: "45px",
-//       // margin: '27px',
-//       // marginTop: '-370px',
-//       fontSize: "25px",
-//       backgroundColor: isClicked ? "#A5E84D" : "#FFFFFF",
-//     };
+    const buttonStyle = {
+      width: "300px",
+      height: "70px",
+      boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
+      borderRadius: "45px",
+      // margin: '27px',
+      // marginTop: '-370px',
+      fontSize: "25px",
+      backgroundColor: isClicked ? "#A5E84D" : "#FFFFFF",
+    };
 
-//     return (
-//       <IDKitWidget
-//         action="my_action"
-//         signal="my_signal"
-//         onSuccess={onSuccess}
-//         handleVerify={handleProof}
-//         app_id={app_id_key}
-//         credential_types={[CredentialType.Orb, CredentialType.Phone]}
-//       >
-//         {({ open }) => (
-//           <button style={buttonStyle} onClick={open}>
-//             Verify WorldId
-//           </button>
-//         )}
-//       </IDKitWidget>
-//     );
-//   };
+    return (
+      <IDKitWidget
+        action="my_action"
+        signal="my_signal"
+        onSuccess={onSuccess}
+        handleVerify={handleProof}
+        app_id={app_id_key}
+        credential_types={[CredentialType.Orb, CredentialType.Phone]}
+      >
+        {({ open }) => (
+          <button style={buttonStyle} onClick={open}>
+            Verify WorldId
+          </button>
+        )}
+      </IDKitWidget>
+    );
+  };
 
   const MintButton = () => {
     const [isClicked, setIsClicked] = useState(false);
@@ -225,17 +225,17 @@ const Home: NextPage = () => {
     );
   };
 
-//   const handleProof = (result: ISuccessResult) => {
-//     return new Promise<void>(resolve => {
-//       setTimeout(() => resolve(), 3000);
-//       // NOTE: Example of how to decline the verification request and show an error message to the user
-//       console.log(result);
-//     });
-//   };
+  const handleProof = (result: ISuccessResult) => {
+    return new Promise<void>(resolve => {
+      setTimeout(() => resolve(), 3000);
+      // NOTE: Example of how to decline the verification request and show an error message to the user
+      console.log(result);
+    });
+  };
 
-//   const onSuccess = (result: ISuccessResult) => {
-//     console.log(result);
-//   };
+  const onSuccess = (result: ISuccessResult) => {
+    console.log(result);
+  };
 
   const app_id_key = "app_746b524e1d3b0eaf005e9c78835ec0d8";
 
@@ -253,7 +253,7 @@ const Home: NextPage = () => {
               <RainbowKitCustomConnectButton />
             ) : (
               <>
-                {/* <WorldButton /> */}
+                <WorldButton />
                 <MintButton />
                 <DonateButton />
                 <MintTree />
