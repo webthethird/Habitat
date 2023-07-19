@@ -100,7 +100,7 @@ describe("Habitat", function () {
 
   describe("Ownership", function () {
     it("Should not allow a user to change the Habitat dependencies", async function () {
-      const [_, user] = await ethers.getSigners();
+      const [_owner, user] = await ethers.getSigners();
       await expect(nftree.connect(user).setHabitatNFT(user.address)).to.be.revertedWith(
         "Ownable: caller is not the owner",
       );
@@ -140,7 +140,7 @@ describe("Habitat", function () {
     let mintReceipt: ContractReceipt;
 
     before(async function () {
-      const [_, user] = await ethers.getSigners();
+      const [, user] = await ethers.getSigners();
       userAddress = user.address;
       // Mint an NFT
       mintReceipt = await (await habitatNFT.connect(user).mint()).wait();
@@ -166,7 +166,7 @@ describe("Habitat", function () {
     });
 
     it("Should not allow the user to mint more than 1 NFT", async function () {
-      const [_, user] = await ethers.getSigners();
+      const [, user] = await ethers.getSigners();
       expect(habitatNFT.connect(user).mint()).to.be.revertedWith(
         "ERC721Soulbound: Sender already owns a souldbound token",
       );
@@ -188,7 +188,9 @@ describe("Habitat", function () {
 
     it("Should not allow user to transfer their NFT", async function () {
       const [, user, user2] = await ethers.getSigners();
-      expect(habitatNFT.connect(user).transferFrom(user.address, user2.address, 0)).to.be.revertedWith("ERC721Soulbound: Token has already been soulbound");
+      expect(habitatNFT.connect(user).transferFrom(user.address, user2.address, 0)).to.be.revertedWith(
+        "ERC721Soulbound: Token has already been soulbound",
+      );
     });
   });
 
@@ -205,7 +207,7 @@ describe("Habitat", function () {
     const schemaEncoder = new SchemaEncoder(schema);
 
     before(async () => {
-      const [_, __, user] = await ethers.getSigners();
+      const [, , user] = await ethers.getSigners();
       userAddress = user.address;
       // Send donation from the user
       txResponse = await user.sendTransaction({
@@ -240,12 +242,12 @@ describe("Habitat", function () {
     });
 
     it("Should not allow users to create a donation attestation without a HabitatNFT", async function () {
-      const [_, __, user] = await ethers.getSigners();
+      const [, , user] = await ethers.getSigners();
       expect(eas.connect(user).attest(attestationRequest)).to.be.revertedWith("Recipient must own a Habitat NFT");
     });
 
     it("Should create an attestation once the user has a HabitatNFT", async function () {
-      const [_, __, user] = await ethers.getSigners();
+      const [, , user] = await ethers.getSigners();
       await habitatNFT.connect(user).mint();
       const attestTx = await eas.connect(user).attest(attestationRequest);
       const attestReceipt = await attestTx.wait();
@@ -295,15 +297,15 @@ describe("Habitat", function () {
     <path d="M674.047 306.552C674.047 317.04 665.658 325.544 655.31 325.544H605.344C594.996 325.544 586.607 317.04 586.607 306.552V291.992C586.607 281.502 594.996 273 605.344 273H655.31C665.658 273 674.047 281.503 674.047 291.992V306.552Z" fill="#65AD18"/>
     <path d="M605.344 273C595.206 273 586.953 281.164 586.623 291.359C586.952 301.553 595.205 309.717 605.344 309.717H655.31C665.448 309.717 673.701 301.553 674.031 291.359C673.701 281.164 665.448 273 655.31 273H605.344Z" fill="#7FC62E"/>
     <path d="M635.792 294.207C635.792 296.304 634.114 298.005 632.045 298.005H618.617C616.548 298.005 614.87 296.304 614.87 294.207C614.87 292.109 616.548 290.409 618.617 290.409H632.045C634.114 290.409 635.792 292.109 635.792 294.207Z" fill="#A5E84D"/>
-    <path d="M619.241 282.496C619.241 284.593 618.014 286.294 616.5 286.294H606.68C605.166 286.294 603.939 284.593 603.939 282.496C603.939 280.399 605.166 278.697 606.68 278.697H616.5C618.014 278.697 619.241 280.398 619.241 282.496Z" fill="#A5E84D"/>`
+    <path d="M619.241 282.496C619.241 284.593 618.014 286.294 616.5 286.294H606.68C605.166 286.294 603.939 284.593 603.939 282.496C603.939 280.399 605.166 278.697 606.68 278.697H616.5C618.014 278.697 619.241 280.398 619.241 282.496Z" fill="#A5E84D"/>`;
 
     before(async () => {
-      const [_, __, user] = await ethers.getSigners();
+      const [, , user] = await ethers.getSigners();
       userAddress = user.address;
     });
 
     it("Should allow the user to mint an NFTree to their Habitat's account", async function () {
-      const [_, __, user] = await ethers.getSigners();
+      const [, , user] = await ethers.getSigners();
       const chainId = network.config.chainId ? network.config.chainId : 31337;
       const greenPoints = await habitatNFT.greenPoints(userAddress);
       const habitatId = await habitatNFT.tokenOfOwnerByIndex(userAddress, 0);
@@ -312,12 +314,12 @@ describe("Habitat", function () {
         chainId,
         habitatNFT.address,
         habitatId,
-        0
+        0,
       );
       expect(greenPoints).to.equal(ethers.utils.parseEther("10"));
       await nftree.connect(user).mint(treeSVG, habitatId);
       // NFTree is minted to the HabitatNFT's tokenbound account
-      const treeBalanceUser = await nftree.balanceOf(userAddress)
+      const treeBalanceUser = await nftree.balanceOf(userAddress);
       expect(treeBalanceUser).to.equal(0);
       const treeBalanceHabitat = await nftree.balanceOf(habitatAccount);
       expect(treeBalanceHabitat).to.equal(1);
@@ -330,7 +332,7 @@ describe("Habitat", function () {
     });
 
     it("Should not allow the user to mint an NFTree without 10 green points", async function () {
-      const [_, __, user] = await ethers.getSigners();
+      const [, , user] = await ethers.getSigners();
       const chainId = network.config.chainId ? network.config.chainId : 31337;
       const habitatId = await habitatNFT.tokenOfOwnerByIndex(userAddress, 0);
       const habitatAccount = await erc6551Registry.account(
@@ -338,11 +340,11 @@ describe("Habitat", function () {
         chainId,
         habitatNFT.address,
         habitatId,
-        0
+        0,
       );
-      expect(nftree.connect(user).mint(treeSVG, habitatId)).to.be.revertedWith("Not enough green points to mint")
+      expect(nftree.connect(user).mint(treeSVG, habitatId)).to.be.revertedWith("Not enough green points to mint");
       const treeBalanceHabitat = await nftree.balanceOf(habitatAccount);
       expect(treeBalanceHabitat).to.equal(1);
-    })
+    });
   });
 });
