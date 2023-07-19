@@ -100,7 +100,7 @@ describe("Habitat", function () {
 
   describe("Ownership", function () {
     it("Should not allow a user to change the Habitat dependencies", async function () {
-      const [_owner, user] = await ethers.getSigners();
+      const [, user] = await ethers.getSigners();
       await expect(nftree.connect(user).setHabitatNFT(user.address)).to.be.revertedWith(
         "Ownable: caller is not the owner",
       );
