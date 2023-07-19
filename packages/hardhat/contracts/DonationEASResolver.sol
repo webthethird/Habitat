@@ -28,7 +28,7 @@ contract DonationEASResolver is Ownable, SchemaResolver {
     function onAttest(Attestation calldata attestation, uint256 /*value*/) internal override returns (bool) {
         (address donation_to, address donation_from, bytes32 donation_tx, uint256 donation_value) = abi.decode(attestation.data, (address, address, bytes32, uint256));
         emit NewDonation(donation_to, donation_from, donation_value, donation_tx);
-        habitatNFT.grantGreenPoints(donation_from, donation_value);
+        habitatNFT.grantGreenPoints(donation_from, donation_value * 100);
         return true;
     }
 

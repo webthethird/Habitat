@@ -16,7 +16,7 @@ contract HabitatNFT is Ownable, SingleOwnershipSoulbound, IERC4883 {
     address private immutable ERC_6551_IMPL;
     uint256 private immutable CHAIN = block.chainid;
     address public immutable donationResolver;
-    uint256 public constant pointsDecimals = 16;
+    uint256 public constant pointsDecimals = 18;
 
     NFTree public nftree;
     mapping(uint256 => address) public erc6551Accounts;
